@@ -32,16 +32,19 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlRootBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
 
 /**
- * The root container model class that will have &lt;portlet-app&gt; TODO: Update the comments
+ * The root container model class that will have &lt;portlet-app&gt; 
  * 
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> <br/>
  */
 @GenerateImpl
 @Image( path = "images/obj16/portlet_model_obj.gif" )
-@XmlRootBinding( namespace = "http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd", schemaLocation = "http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd", elementName = "portlet-app" )
+@XmlNamespace( prefix = "", uri = "http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" )
+@XmlSchema( namespace = "http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd", location = "http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" )
+@XmlBinding( path = "portlet-app" )
 public interface IPortletApp extends IResourceBundle, IIdentifiable {
 
 	ModelElementType TYPE = new ModelElementType( IPortletApp.class );

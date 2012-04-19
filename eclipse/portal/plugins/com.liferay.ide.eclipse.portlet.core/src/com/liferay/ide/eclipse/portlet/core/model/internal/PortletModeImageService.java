@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.ImageServiceData;
 
 /**
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
@@ -45,32 +46,24 @@ public class PortletModeImageService extends ImageService {
 
 	private ModelPropertyListener listener;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.sapphire.modeling.ModelElementService#init(org.eclipse.sapphire.modeling.IModelElement,
-	 * java.lang.String[])
-	 */
 	@Override
-	protected void init() {
+	protected void initImageService() {
 		this.listener = new ModelPropertyListener() {
 
 			@Override
 			public void handlePropertyChangedEvent( final ModelPropertyChangeEvent event ) {
-				broadcast();
+				refresh();
 			}
 		};
 
 		context( IModelElement.class ).addListener( this.listener, IPortletMode.PROP_PORTLET_MODE.getName() );
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.sapphire.modeling.ImageService#provide()
-	 */
 	@Override
-	public ImageData provide() {
+	protected ImageServiceData compute() {
 		String portletMode = null;
 		IModelElement element = context( IModelElement.class );
+		ImageData imageData = null;
 
 		if ( element instanceof ICustomPortletMode ) {
 			ICustomPortletMode iCustomPortletMode = (ICustomPortletMode) element;
@@ -83,17 +76,23 @@ public class PortletModeImageService extends ImageService {
 
 		if ( portletMode != null ) {
 			if ( "VIEW".equalsIgnoreCase( portletMode ) ) {
-				return IMG_VIEW;
+				imageData = IMG_VIEW;
 			}
 			else if ( "EDIT".equalsIgnoreCase( portletMode ) ) {
-				return IMG_EDIT;
+				imageData = IMG_EDIT;
 			}
 			else if ( "HELP".equalsIgnoreCase( portletMode ) ) {
-				return IMG_HELP;
+				imageData = IMG_HELP;
 			}
 
 		}
-		return IMG_DEFAULT;
+
+		if ( imageData == null )
+		{
+			imageData = IMG_DEFAULT;
+		}
+
+		return new ImageServiceData( imageData );
 	}
 
 	/**

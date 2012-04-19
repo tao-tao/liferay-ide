@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelPropertyChangeEvent;
 import org.eclipse.sapphire.modeling.ModelPropertyListener;
 import org.eclipse.sapphire.services.ImageService;
+import org.eclipse.sapphire.services.ImageServiceData;
 
 
 public class ColumnImageService extends ImageService {
@@ -36,14 +37,13 @@ public class ColumnImageService extends ImageService {
 	private ModelPropertyListener listener;
 
 	@Override
-	protected void init() {
-		super.init();
+	protected void initImageService() {
 
 		this.listener = new ModelPropertyListener() {
 
 			@Override
 			public void handlePropertyChangedEvent(final ModelPropertyChangeEvent event) {
-				broadcast();
+				refresh();
 			}
 		};
 
@@ -62,13 +62,17 @@ public class ColumnImageService extends ImageService {
 	}
 
 	@Override
-	public ImageData provide() {
+	public ImageServiceData compute() {
+		ImageData imageData = null;
+
 		if ( ( context( IColumn.class ) ).isPrimary().getContent() ) {
-			return IMG_COLUMN_PRIMARY;
+			imageData = IMG_COLUMN_PRIMARY;
 		}
 		else {
-			return IMG_COLUMN;
+			imageData = IMG_COLUMN;
 		}
+
+		return new ImageServiceData( imageData );
 	}
 
 }

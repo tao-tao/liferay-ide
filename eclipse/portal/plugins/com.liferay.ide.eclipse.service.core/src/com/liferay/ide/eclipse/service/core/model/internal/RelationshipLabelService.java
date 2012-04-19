@@ -4,29 +4,36 @@ import com.liferay.ide.eclipse.service.core.model.IRelationship;
 import com.liferay.ide.eclipse.service.core.model.IServiceBuilder;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.services.DerivedValueService;
+import org.eclipse.sapphire.services.DerivedValueServiceData;
 
 
 public class RelationshipLabelService extends DerivedValueService {
 
 	@Override
-	public String getDerivedValue() {
-		IModelParticle parent = context( IModelElement.class ).parent();
+	protected void initDerivedValueService()
+	{
+	}
 
-		while ( parent != null && !( parent instanceof IServiceBuilder ) ) {
-			parent = parent.parent();
-		}
+	@Override
+	protected DerivedValueServiceData compute() {
+		String value = null;
+		IServiceBuilder sb = context( IModelElement.class ).nearest( IServiceBuilder.class );
 
-		if ( parent instanceof IServiceBuilder ) {
-			IServiceBuilder sb = (IServiceBuilder) parent;
-
-			if ( sb.getShowRelationshipLabels().getContent() ) {
-				return ( context( IRelationship.class ) ).getForeignKeyColumnName().getContent();
+		if ( sb != null )
+		{
+			if ( sb.getShowRelationshipLabels().getContent() )
+			{
+				value = ( context( IRelationship.class ) ).getForeignKeyColumnName().getContent();
 			}
 		}
 
-		return "";
+		if ( value == null )
+		{
+			value = "";
+		}
+
+		return new DerivedValueServiceData( value );
 	}
 
 }
