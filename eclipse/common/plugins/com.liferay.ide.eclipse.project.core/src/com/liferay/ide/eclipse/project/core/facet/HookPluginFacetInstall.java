@@ -75,4 +75,10 @@ public class HookPluginFacetInstall extends PluginFacetInstall {
 		configWebXML();
 	}
 
+	@Override
+	protected String getDefaultOutputLocation()
+	{
+		return IPluginFacetConstants.HOOK_PLUGIN_SDK_DEFAULT_OUTPUT_FOLDER;
+	}
+
 }

@@ -158,6 +158,12 @@ public class PortletPluginFacetInstall extends PluginFacetInstall {
 		}
 	}
 
+	@Override
+	protected String getDefaultOutputLocation()
+	{
+		return IPluginFacetConstants.PORTLET_PLUGIN_SDK_DEFAULT_OUTPUT_FOLDER;
+	}
+
 	// protected void overwriteProjectFromTemplate(IPath newProjectPath, IPortletFramework portletTemplate) {
 	// String bundleId = portletTemplate.getBundleId();
 	//
