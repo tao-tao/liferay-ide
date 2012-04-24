@@ -120,9 +120,9 @@ public class PluginProjectDecorator extends LabelProvider implements ILightweigh
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof IProject) {
-			DecorationContext ctx = (DecorationContext) decoration.getDecorationContext();
+			//DecorationContext ctx = (DecorationContext) decoration.getDecorationContext();
 
-			ctx.putProperty(IDecoration.ENABLE_REPLACE, true);
+			//ctx.putProperty(IDecoration.ENABLE_REPLACE, true);
 
 			IProject project = (IProject) element;
 
