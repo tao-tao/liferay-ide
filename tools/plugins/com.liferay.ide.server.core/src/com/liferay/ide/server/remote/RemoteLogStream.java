@@ -144,6 +144,11 @@ public class RemoteLogStream extends BufferedInputStream
                 }
             }
 
+            if( conn == null )
+            {
+                conn = url.openConnection();
+                conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
+            }
         }
         catch( URISyntaxException e )
         {
