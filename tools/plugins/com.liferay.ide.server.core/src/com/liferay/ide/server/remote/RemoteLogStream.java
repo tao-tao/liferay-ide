@@ -100,7 +100,6 @@ public class RemoteLogStream extends BufferedInputStream
         String authStringEnc = new String( authEncBytes );
         final IProxyService proxyService = LiferayCore.getProxyService();
         URLConnection conn = null;
-        boolean isProxy = false;
 
         try
         {
@@ -113,7 +112,6 @@ public class RemoteLogStream extends BufferedInputStream
                 {
                     System.setProperty( "http.proxyHost", data.getHost() ); //$NON-NLS-1$
                     System.setProperty( "http.proxyPort", String.valueOf( data.getPort() ) ); //$NON-NLS-1$
-                    isProxy = true;
 
                     break;
                 }
@@ -128,7 +126,6 @@ public class RemoteLogStream extends BufferedInputStream
                 {
                     System.setProperty( "socksProxyHost", data.getHost() ); //$NON-NLS-1$
                     System.setProperty( "socksProxyPort", String.valueOf( data.getPort() ) ); //$NON-NLS-1$
-                    isProxy = true;
 
                     break;
                 }
@@ -138,18 +135,12 @@ public class RemoteLogStream extends BufferedInputStream
         {
             LiferayServerCore.logError( "Could not read proxy data", e ); //$NON-NLS-1$
         }
-        finally
-        {
-            conn = url.openConnection();
-            conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
 
-        if( isProxy )
-        {
-            conn.setAllowUserInteraction( false );
-        }
-
+        conn = url.openConnection();
+        conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
         Authenticator.setDefault( null );
+        conn.setAllowUserInteraction( false );
+
         return conn.getInputStream();
     }
 
