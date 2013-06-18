@@ -100,63 +100,56 @@ public class RemoteLogStream extends BufferedInputStream
         String authStringEnc = new String( authEncBytes );
         final IProxyService proxyService = LiferayCore.getProxyService();
         URLConnection conn = null;
-        String protocal = url.getProtocol();
+        boolean isProxy = false;
 
         try
         {
             URI uri = new URI( "HTTP://" + url.getHost() + ":" + url.getPort() ); //$NON-NLS-1$ //$NON-NLS-2$
             IProxyData[] proxyDataForHost = proxyService.select( uri );
 
-            if( "http".equals( protocal ) ) //$NON-NLS-1$
+            for( IProxyData data : proxyDataForHost )
             {
-                for( IProxyData data : proxyDataForHost )
+                if( data.getHost() != null )
                 {
-                    if( data.getHost() != null )
-                    {
-                        System.setProperty( "http.proxyHost", data.getHost() ); //$NON-NLS-1$
-                        System.setProperty( "http.proxyPort", String.valueOf( data.getPort() ) ); //$NON-NLS-1$
-                        conn = url.openConnection();
-                        conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
-                        Authenticator.setDefault( null );
-                        conn.setAllowUserInteraction( false );
+                    System.setProperty( "http.proxyHost", data.getHost() ); //$NON-NLS-1$
+                    System.setProperty( "http.proxyPort", String.valueOf( data.getPort() ) ); //$NON-NLS-1$
+                    isProxy = true;
 
-                        break;
-                    }
+                    break;
                 }
             }
 
-            if( "socks".equals( protocal ) ) //$NON-NLS-1$
-            {
-                uri = new URI( "SOCKS://" + url.getHost() + ":" + url.getPort() ); //$NON-NLS-1$ //$NON-NLS-2$
-                proxyDataForHost = proxyService.select( uri );
+            uri = new URI( "SOCKS://" + url.getHost() + ":" + url.getPort() ); //$NON-NLS-1$ //$NON-NLS-2$
+            proxyDataForHost = proxyService.select( uri );
 
-                for( IProxyData data : proxyDataForHost )
+            for( IProxyData data : proxyDataForHost )
+            {
+                if( data.getHost() != null )
                 {
-                    if( data.getHost() != null )
-                    {
-                        System.setProperty( "socksProxyHost", data.getHost() ); //$NON-NLS-1$
-                        System.setProperty( "socksProxyPort", String.valueOf( data.getPort() ) ); //$NON-NLS-1$
-                        conn = url.openConnection();
-                        conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
-                        Authenticator.setDefault( null );
-                        conn.setAllowUserInteraction( false );
+                    System.setProperty( "socksProxyHost", data.getHost() ); //$NON-NLS-1$
+                    System.setProperty( "socksProxyPort", String.valueOf( data.getPort() ) ); //$NON-NLS-1$
+                    isProxy = true;
 
-                        break;
-                    }
+                    break;
                 }
-            }
-
-            if( conn == null )
-            {
-                conn = url.openConnection();
-                conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         catch( URISyntaxException e )
         {
             LiferayServerCore.logError( "Could not read proxy data", e ); //$NON-NLS-1$
         }
+        finally
+        {
+            conn = url.openConnection();
+            conn.setRequestProperty( "Authorization", "Basic " + authStringEnc ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
 
+        if( isProxy )
+        {
+            conn.setAllowUserInteraction( false );
+        }
+
+        Authenticator.setDefault( null );
         return conn.getInputStream();
     }
 
