@@ -87,14 +87,14 @@ public class RemoteConnection implements IRemoteConnection
     {
         String filePath = ResourcesPlugin.getWorkspace().getRoot().getLocation() + "/.metadata"; //$NON-NLS-1$
         String fileName = ".remoteLog"; //$NON-NLS-1$
-        File log =new File( filePath, fileName );
-        
+        File log = new File( filePath, fileName );
+
         try
         {
-            traceLog = new FileWriter( log, true);
+            traceLog = new FileWriter( log, true );
 
-            traceLog.write( string );
-            
+            traceLog.write( string + "\n" ); //$NON-NLS-1$
+
             traceLog.flush();
 
         }
@@ -112,52 +112,52 @@ public class RemoteConnection implements IRemoteConnection
 
     private HttpClient getHttpClient()
     {
-        trace("getHttpClient()"+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("getHttpClient()"); //$NON-NLS-1$
         
         if( this.httpClient == null )
         {
-            trace("httpClient == null"+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("httpClient == null"); //$NON-NLS-1$
             
             DefaultHttpClient newDefaultHttpClient = null;
 
             if( getUsername() != null || getPassword() != null )
             {
-                trace("getUsername(): "+getUsername()+"\n\t getPassword(): "+getPassword()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                trace("getUsername(): "+getUsername()+"\n\t getPassword(): "+getPassword() ); //$NON-NLS-1$ //$NON-NLS-2$
                 try
                 {
                     final IProxyService proxyService = LiferayCore.getProxyService();
                     trace("IproxyServce: "+proxyService); //$NON-NLS-1$
 
                     URI uri = new URI( "http://" + getHost() + ":" + getHttpPort()); //$NON-NLS-1$ //$NON-NLS-2$
-                    trace("Http proxy uri: "+uri+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                    trace("Http proxy uri: "+uri ); //$NON-NLS-1$
                     IProxyData[] proxyDataForHost = proxyService.select( uri );
-                    trace("get http proxy data: "+proxyDataForHost+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                    trace("get http proxy data: "+proxyDataForHost ); //$NON-NLS-1$
 
                     for( IProxyData data : proxyDataForHost )
                     {
                         if( data.getHost() != null && data.getPort() > 0 )
                         {
-                            trace("IProxyData's host and port for http proxy: "+data.getHost()+":"+data.getPort()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            trace("IProxyData's host and port for http proxy: "+data.getHost()+":"+data.getPort() ); //$NON-NLS-1$ //$NON-NLS-2$
                             SchemeRegistry schemeRegistry = new SchemeRegistry();
                             schemeRegistry.register( new Scheme(
                                 "http", data.getPort(), PlainSocketFactory.getSocketFactory() ) ); //$NON-NLS-1$
-                            trace("The schemeRegistry value: "+schemeRegistry+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                            trace("The schemeRegistry value: "+schemeRegistry ); //$NON-NLS-1$
 
                             PoolingClientConnectionManager cm = new PoolingClientConnectionManager( schemeRegistry );
 
-                            trace("PoolingClientConnectionManager creating: "+cm+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                            trace("PoolingClientConnectionManager creating: "+cm ); //$NON-NLS-1$
                             cm.setMaxTotal( 200 );
                             cm.setDefaultMaxPerRoute( 20 );
                             
-                            trace("PoolingClientConnectionManager: "+cm.getTotalStats()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                            trace("PoolingClientConnectionManager: "+cm.getTotalStats()); //$NON-NLS-1$ 
 
                             DefaultHttpClient newHttpClient = new DefaultHttpClient( cm );
                             trace("HttpClient: "+newHttpClient.getRequestInterceptorCount()+"\n\tgetResponseInterceptorCount(): "+newHttpClient.getResponseInterceptorCount()+"\n\tParams: "+newHttpClient.getParams()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                             HttpHost proxy = new HttpHost( data.getHost(), data.getPort() );
-                            trace("HttpHost: "+proxy.getHostName()+":"+proxy.getPort()+"\n\t Scheme: "+proxy.getSchemeName()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                            trace("HttpHost: "+proxy.getHostName()+":"+proxy.getPort()+"\n\t Scheme: "+proxy.getSchemeName() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 
                             newHttpClient.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
-                            trace("Httphost parameter: "+newHttpClient.getParams()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                            trace("Httphost parameter: "+newHttpClient.getParams() ); //$NON-NLS-1$
 
                             newDefaultHttpClient = newHttpClient;
                             break;
@@ -166,11 +166,11 @@ public class RemoteConnection implements IRemoteConnection
 
                     if( newDefaultHttpClient == null )
                     {
-                        trace("newDefualtHttpClient: "+newDefaultHttpClient+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        trace("newDefualtHttpClient: "+newDefaultHttpClient ); //$NON-NLS-1$
                         uri = new URI( "SOCKS://" + getHost() + ":" + getHttpPort() ); //$NON-NLS-1$ //$NON-NLS-2$
-                        trace("uri for socks proxyData: "+uri+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        trace("uri for socks proxyData: "+uri ); //$NON-NLS-1$
                         proxyDataForHost = proxyService.select( uri );
-                        trace("socks proxy data: "+proxyDataForHost+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        trace("socks proxy data: "+proxyDataForHost ); //$NON-NLS-1$
 
                         for( IProxyData data : proxyDataForHost )
                         {
@@ -182,7 +182,7 @@ public class RemoteConnection implements IRemoteConnection
                                 newHttpClient.getParams().setParameter( "socks.port", data.getPort() ); //$NON-NLS-1$
                                 newHttpClient.getConnectionManager().getSchemeRegistry().register(
                                     new Scheme( "socks", data.getPort(), PlainSocketFactory.getSocketFactory() ) ); //$NON-NLS-1$
-                                trace( "socks proxy authSchemes: "+newHttpClient.getAuthSchemes()+"\n\tsocks proxy params: "+newHttpClient.getParams());  //$NON-NLS-1$//$NON-NLS-2$
+                                trace( "socks proxy authSchemes: "+newHttpClient.getAuthSchemes()+"\n\tsocks proxy params: "+newHttpClient.getParams() );  //$NON-NLS-1$//$NON-NLS-2$
 
                                 newDefaultHttpClient = newHttpClient;
                                 break;
@@ -203,10 +203,10 @@ public class RemoteConnection implements IRemoteConnection
                 newDefaultHttpClient.getCredentialsProvider().setCredentials(
                     new AuthScope( getHost(), getHttpPort() ),
                     new UsernamePasswordCredentials( getUsername(), getPassword() ) );
-                trace( "newDefaultHttpClient authSchemes: " + newDefaultHttpClient.getAuthSchemes() + "\n\tcredentialsProvider: " + newDefaultHttpClient.getCredentialsProvider() + "\n\tparams: "+newDefaultHttpClient.getParams() + "\n\tProxyAuthenticationStrategy(): "+newDefaultHttpClient.getProxyAuthenticationStrategy() +"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                trace( "newDefaultHttpClient authSchemes: " + newDefaultHttpClient.getAuthSchemes() + "\n\tcredentialsProvider: " + newDefaultHttpClient.getCredentialsProvider() + "\n\tparams: "+newDefaultHttpClient.getParams() + "\n\tProxyAuthenticationStrategy(): "+newDefaultHttpClient.getProxyAuthenticationStrategy() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
 
                 this.httpClient = newDefaultHttpClient;
-                trace( "httpClient params: " + this.httpClient.getParams() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                trace( "httpClient params: " + this.httpClient.getParams() ); //$NON-NLS-1$ 
             }
         }
 
@@ -215,23 +215,23 @@ public class RemoteConnection implements IRemoteConnection
 
     public int getHttpPort()
     {
-        trace("getHttpPort(): "+httpPort+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("getHttpPort(): "+httpPort ); //$NON-NLS-1$ 
         return httpPort;
     }
 
     protected String getHttpResponse( HttpUriRequest request ) throws Exception
     {
         HttpResponse response = getHttpClient().execute( request );
-        trace("HttpResponse params: "+response.getParams()+"\n\tprotocalVersion: "+response.getProtocolVersion()+"\n\tstatusLine: "+response.getStatusLine().getStatusCode()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        trace("HttpResponse params: "+response.getParams()+"\n\tprotocalVersion: "+response.getProtocolVersion()+"\n\tstatusLine: "+response.getStatusLine().getStatusCode() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
         int statusCode = response.getStatusLine().getStatusCode();
 
         if( statusCode == HttpStatus.SC_OK )
         {
             HttpEntity entity = response.getEntity();
-            trace("getEntity(): "+ entity+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("getEntity(): "+ entity ); //$NON-NLS-1$ 
 
             String body = CoreUtil.readStreamToString( entity.getContent() );
-            trace("entity value: "+ body+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("entity value: "+ body ); //$NON-NLS-1$ 
 
             EntityUtils.consume( entity );
 
@@ -247,13 +247,13 @@ public class RemoteConnection implements IRemoteConnection
     {
         if( !( args[0] instanceof String ) )
         {
-            throw new IllegalArgumentException( "First argument must be a string." +"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IllegalArgumentException( "First argument must be a string." ); //$NON-NLS-1$ 
         }
 
         HttpGet getAPIMethod = new HttpGet();
-        trace("HttpGet: "+getAPIMethod.getMethod()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("HttpGet: "+getAPIMethod.getMethod() ); //$NON-NLS-1$
 
-        trace("The return value in httpJSONAPI: "+ httpJSONAPI( getAPIMethod, args ) +"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("The return value in httpJSONAPI: "+ httpJSONAPI( getAPIMethod, args ) ); //$NON-NLS-1$ 
         return httpJSONAPI( getAPIMethod, args );
     }
 
@@ -264,7 +264,7 @@ public class RemoteConnection implements IRemoteConnection
         try
         {
             retval = new JSONObject( response );
-            trace("getJSONResponse returns: "+ retval+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("getJSONResponse returns: "+ retval ); //$NON-NLS-1$ 
         }
         catch( JSONException e )
         {
@@ -282,19 +282,19 @@ public class RemoteConnection implements IRemoteConnection
 
     public String getPassword()
     {
-        trace("getPassword(): "+password+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("getPassword(): "+password ); //$NON-NLS-1$ 
         return password;
     }
 
     public String getUsername()
     {
-        trace("getUsername(): "+username+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("getUsername(): "+username ); //$NON-NLS-1$ 
         return username;
     }
 
     protected Object httpJSONAPI( Object... args ) throws APIException
     {
-        trace("httpJSONAPI() params: "+ args+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("httpJSONAPI() params: "+ args ); //$NON-NLS-1$ 
         if( !( args[0] instanceof HttpRequestBase ) )
         {
             throw new IllegalArgumentException( "First argument must be a HttpRequestBase." ); //$NON-NLS-1$
@@ -304,22 +304,22 @@ public class RemoteConnection implements IRemoteConnection
         String api = null;
         Object[] params = new Object[0];
 
-        trace("value in httpJSONAPI args[0]: "+ args[0]+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("value in httpJSONAPI args[0]: "+ args[0] ); //$NON-NLS-1$ 
         final HttpRequestBase request = (HttpRequestBase) args[0];
-        trace("HttpRequestBase getMethod(): "+request.getMethod()+"\n\tHttpRequestBase: "+request+"\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        trace("HttpRequestBase getMethod(): "+request.getMethod()+"\n\tHttpRequestBase: "+request ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
         if( args[1] instanceof String )
         {
-            trace("if args[1] instanceof String: "+ (args[1] instanceof String)+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("if args[1] instanceof String: "+ (args[1] instanceof String) ); //$NON-NLS-1$ 
             api = args[1].toString();
-            trace("\tvalue in httpJSONAPI params args[1]: "+api+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("\tvalue in httpJSONAPI params args[1]: "+api ); //$NON-NLS-1$ 
         }
         else if( args[1] instanceof Object[] )
         {
-            trace("if args[1] instancof Obejct: "+ ( args[1] instanceof Object[] ) +"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("if args[1] instancof Obejct: "+ ( args[1] instanceof Object[] ) ); //$NON-NLS-1$ 
             params = (Object[]) args[1];
             api = params[0].toString();
-            trace("\tvalue in httpJSONAPI params args[1]: "+ api+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("\tvalue in httpJSONAPI params args[1]: "+ api ); //$NON-NLS-1$ 
         }
         else
         {
@@ -333,7 +333,7 @@ public class RemoteConnection implements IRemoteConnection
             builder.setHost( getHost() );
             builder.setPort( getHttpPort() );
             builder.setPath( api );
-            trace("URIBuilder properties: "+"\n\tbuilder fragment: "+builder.getFragment()+"\n\tbuiderHost: "+builder.getHost()+"\n\tbuilderPath: "+builder.getPath()+"\n\tbuilderPort: "+builder.getPort()+"\n\tbuilderScheme: "+builder.getScheme()+"\n\tbuilderUserInfo: "+builder.getUserInfo()+"\n");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+            trace("URIBuilder properties: "+"\n\tbuilder fragment: "+builder.getFragment()+"\n\tbuiderHost: "+builder.getHost()+"\n\tbuilderPath: "+builder.getPath()+"\n\tbuilderPort: "+builder.getPort()+"\n\tbuilderScheme: "+builder.getScheme()+"\n\tbuilderUserInfo: "+builder.getUserInfo() );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ 
 
             if( params.length >= 2 )
             {
@@ -345,30 +345,30 @@ public class RemoteConnection implements IRemoteConnection
                     if( params[i] != null )
                     {
                         name = params[i].toString();
-                        trace("params name: "+name+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        trace("params name: "+name ); //$NON-NLS-1$ 
                     }
 
                     if( params[i + 1] != null )
                     {
                         value = params[i + 1].toString();
-                        trace("params value: "+value+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        trace("params value: "+value ); //$NON-NLS-1$ 
                     }
 
                     builder.setParameter( name, value );
-                    trace("URIbuilder properties after set parameters: "+"\n\tbuilder fragment: "+builder.getFragment()+"\n\tbuiderHost: "+builder.getHost()+"\n\tbuilderPath: "+builder.getPath()+"\n\tbuilderPort: "+builder.getPort()+"\n\tbuilderScheme: "+builder.getScheme()+"\n\tbuilderUserInfo: "+builder.getUserInfo()+"\n\tbuilderQueryParams: "+builder.getQueryParams());  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+                    trace("URIbuilder properties after set parameters: "+"\n\tbuilder fragment: "+builder.getFragment()+"\n\tbuiderHost: "+builder.getHost()+"\n\tbuilderPath: "+builder.getPath()+"\n\tbuilderPort: "+builder.getPort()+"\n\tbuilderScheme: "+builder.getScheme()+"\n\tbuilderUserInfo: "+builder.getUserInfo()+"\n\tbuilderQueryParams: "+builder.getQueryParams() );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
                 }
             }
 
             request.setURI( builder.build() );
-            trace("Http setURI: "+request.getURI()+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("Http setURI: "+request.getURI() ); //$NON-NLS-1$ 
 
             String response = getHttpResponse( request );
-            trace("getHttpResponse: "+response+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            trace("getHttpResponse: "+response ); //$NON-NLS-1$ 
 
             if( response != null && response.length() > 0 )
             {
                 Object jsonResponse = getJSONResponse( response );
-                trace("jsonResponse: "+jsonResponse+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                trace("jsonResponse: "+jsonResponse ); //$NON-NLS-1$ 
 
                 if( jsonResponse == null )
                 {
@@ -393,7 +393,7 @@ public class RemoteConnection implements IRemoteConnection
             try
             {
                 request.releaseConnection();
-                trace("request.releaseConnection()"+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                trace("request.releaseConnection()" ); //$NON-NLS-1$ 
             }
             finally
             {
@@ -401,20 +401,20 @@ public class RemoteConnection implements IRemoteConnection
             }
         }
 
-        trace("return value of httpJSONAPI: "+retval+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("return value of httpJSONAPI: "+retval ); //$NON-NLS-1$ 
         return retval;
     }
 
     protected Object postJSONAPI( Object... args ) throws APIException
     {
-        trace("postJSONAPI() params: "+ args+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("postJSONAPI() params: "+ args ); //$NON-NLS-1$ 
         if( !( args[0] instanceof String ) )
         {
             throw new IllegalArgumentException( "First argument must be a string." ); //$NON-NLS-1$
         }
 
         HttpPost post = new HttpPost();
-        trace("return value of postJSONAPI(httpJSONAPI( post, args )): "+httpJSONAPI( post, args )+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("return value of postJSONAPI(httpJSONAPI( post, args )): "+httpJSONAPI( post, args ) ); //$NON-NLS-1$ 
 
         return httpJSONAPI( post, args );
     }
@@ -422,14 +422,14 @@ public class RemoteConnection implements IRemoteConnection
     public void setHost( String host )
     {
         this.hostname = host;
-        trace("setHost(): "+host+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("setHost(): "+host ); //$NON-NLS-1$ 
 
         releaseHttpClient();
     }
 
     public void setHttpPort( String httpPort )
     {
-        trace("setHttpPort(): "+ httpPort+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("setHttpPort(): "+ httpPort ); //$NON-NLS-1$ 
         if( httpPort != null )
         {
             this.httpPort = Integer.parseInt( httpPort );
@@ -444,7 +444,7 @@ public class RemoteConnection implements IRemoteConnection
 
     public void setPassword( String password )
     {
-        trace( "setPassword(): " + password + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        trace( "setPassword(): " + password ); //$NON-NLS-1$ 
         this.password = password;
 
         releaseHttpClient();
@@ -452,7 +452,7 @@ public class RemoteConnection implements IRemoteConnection
 
     public void setUsername( String username )
     {
-        trace("setUsername(): "+ username+"\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        trace("setUsername(): "+ username ); //$NON-NLS-1$ 
         this.username = username;
 
         releaseHttpClient();
