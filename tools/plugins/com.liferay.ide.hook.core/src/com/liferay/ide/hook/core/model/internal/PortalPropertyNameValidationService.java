@@ -18,6 +18,7 @@ package com.liferay.ide.hook.core.model.internal;
 import com.liferay.ide.core.ILiferayProject;
 import com.liferay.ide.core.LiferayCore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class PortalPropertyNameValidationService extends ValidationService
 {
 
     private List<String> hookPropertiesNames;
+    private List<String> wildCardHookPropertiesNames;
 
     @Override
     protected void init()
@@ -51,12 +53,28 @@ public class PortalPropertyNameValidationService extends ValidationService
         if( liferayProject != null )
         {
             this.hookPropertiesNames = Arrays.asList( liferayProject.getHookSupportedProperties() );
+            this.wildCardHookPropertiesNames = getWildCardProperties();
         }
     }
 
     private boolean isValidPortalPropertyName( Value<?> value )
     {
-        return hookPropertiesNames.contains( value.getContent() );
+        if( hookPropertiesNames.contains( value.getContent() ) )
+        {
+            return true;
+        }
+        else if( wildCardHookPropertiesNames != null )
+        {
+            for( String name : wildCardHookPropertiesNames )
+            {
+                if( value.getContent().toString().contains( name.subSequence( 0, ( name.indexOf( "*" ) - 1 ) ) ) ) //$NON-NLS-1$
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private boolean isValueEmpty( Value<?> value )
@@ -83,6 +101,23 @@ public class PortalPropertyNameValidationService extends ValidationService
         }
 
         return Status.createOkStatus();
+    }
+    
+    public List<String> getWildCardProperties()
+    {
+        List<String> properties = new ArrayList<String>();
+        
+        for( int i = 0; i < hookPropertiesNames.size(); i++ )
+        {
+            String property = hookPropertiesNames.get( i );
+            
+            if( property.contains( ".*" ) ) //$NON-NLS-1$
+            {
+                properties.add( property );
+            }
+        }
+
+        return properties;
     }
 
     private static class Msgs extends NLS
