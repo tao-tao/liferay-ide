@@ -76,14 +76,11 @@ public class PortalPropertyNamePossibleValuesService extends PossibleValuesServi
 
         for( String wildCardProperty : wildCardHookProperties )
         {
-            if( invalidValue.contains( wildCardProperty.subSequence( 0, wildCardProperty.indexOf( "*" ) - 1 ) ) ) //$NON-NLS-1$
-            {
-                String pattern = "^"+wildCardProperty+"\\w"; //$NON-NLS-1$ //$NON-NLS-2$
+            String pattern = "^" + wildCardProperty + "\\w"; //$NON-NLS-1$ //$NON-NLS-2$
 
-                if( invalidValue.matches( pattern ) )
-                {
-                    return Severity.OK;
-                }
+            if( invalidValue.matches( pattern ) )
+            {
+                return Severity.OK;
             }
         }
 

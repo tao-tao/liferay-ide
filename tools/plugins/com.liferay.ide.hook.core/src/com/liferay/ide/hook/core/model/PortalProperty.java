@@ -41,8 +41,6 @@ public interface PortalProperty extends IModelElement
     // *** Name ***
 
     @NoDuplicates
-//    @Services( { @Service( impl = PortalPropertyNamePossibleValuesService.class ),
-//        @Service( impl = PortalPropertyNameValidationService.class ) } )
     @Service( impl = PortalPropertyNamePossibleValuesService.class )
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" ); //$NON-NLS-1$
 
