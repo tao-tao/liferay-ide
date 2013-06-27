@@ -33,6 +33,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
  * @author Gregory Amerson
+ * @author Tao Tao
  */
 public class PortalPropertyNamePossibleValuesService extends PossibleValuesService
 {
@@ -76,8 +77,8 @@ public class PortalPropertyNamePossibleValuesService extends PossibleValuesServi
 
         for( String wildCardProperty : wildCardHookProperties )
         {
-            String PropertyWithoutWildCard = wildCardProperty.substring( 0, ( wildCardProperty.indexOf( "*" ) - 1 ) ); //$NON-NLS-1$
-            String pattern = "^" + PropertyWithoutWildCard + "\\..+"; //$NON-NLS-1$ //$NON-NLS-2$
+            String propertyWithoutWildCard = wildCardProperty.substring( 0, ( wildCardProperty.indexOf( "*" ) - 1 ) ); //$NON-NLS-1$
+            String pattern = "^" + propertyWithoutWildCard + "\\..+"; //$NON-NLS-1$ //$NON-NLS-2$
 
             if( invalidValue.matches( pattern ) )
             {
@@ -94,7 +95,7 @@ public class PortalPropertyNamePossibleValuesService extends PossibleValuesServi
 
         for( String property : hookProperties )
         {
-            if( property.contains( ".*" ) ) //$NON-NLS-1$
+            if( property.endsWith( ".*" ) ) //$NON-NLS-1$
             {
                 properties.add( property );
             }
