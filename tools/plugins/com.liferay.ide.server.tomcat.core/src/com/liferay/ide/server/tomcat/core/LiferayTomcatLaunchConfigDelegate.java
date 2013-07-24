@@ -72,17 +72,10 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
 
                 if( CoreUtil.compareVersions( version, ILiferayConstants.V620 ) >= 0 )
                 {
-                    if( this.freemarkerDebugPort.matches( "\\d+" ) ) //$NON-NLS-1$
-                    {
-                        retval +=
-                            NLS.bind(
-                                FM_PARAMS, LiferayDebugCore.getPreference( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ),
-                                this.freemarkerDebugPort );
-                    }
-                    else
-                    {
-                        LiferayDebugCore.logError( "FreeMarker debug port is invalid" ); //$NON-NLS-1$
-                    }
+                    retval +=
+                        NLS.bind(
+                            FM_PARAMS, LiferayDebugCore.getPreference( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ),
+                            this.freemarkerDebugPort );
                 }
             }
             catch( CoreException e )
@@ -94,7 +87,8 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
     }
 
     @Override
-    public void launch( final ILaunchConfiguration configuration, String mode, final ILaunch launch, IProgressMonitor monitor )
+    public void launch(
+        final ILaunchConfiguration configuration, String mode, final ILaunch launch, IProgressMonitor monitor )
         throws CoreException
     {
         if( ILaunchManager.DEBUG_MODE.equals( mode ) )
@@ -107,14 +101,7 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
         this.saveLaunchMode = mode;
         this.freemarkerDebugPort = getValidatedDebugPort();
 
-        if( this.freemarkerDebugPort.matches( "\\d+" ) ) //$NON-NLS-1$
-        {
-            launch.setAttribute( LiferayDebugCore.PREF_FM_DEBUG_PORT, this.freemarkerDebugPort );
-        }
-        else
-        {
-            LiferayDebugCore.logError( "Set Launch freemarker port is invalid." ); //$NON-NLS-1$
-        }
+        launch.setAttribute( LiferayDebugCore.PREF_FM_DEBUG_PORT, this.freemarkerDebugPort );
 
         super.launch( configuration, mode, launch, monitor );
         this.saveLaunchMode = null;
@@ -124,10 +111,14 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
 
         if( ILaunchManager.DEBUG_MODE.equals( mode ) && FALSE.equals( stopServer ) )
         {
-            final IServer server = ServerUtil.getServer( configuration );
+            if( launch.getAttribute( LiferayDebugCore.PREF_FM_DEBUG_PORT ) != null &&
+                launch.getAttribute( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ) != null )
+            {
+                final IServer server = ServerUtil.getServer( configuration );
 
-            final IDebugTarget target = new FMDebugTarget( server.getHost(), launch, launch.getProcesses()[0] );
-            launch.addDebugTarget( target );
+                final IDebugTarget target = new FMDebugTarget( server.getHost(), launch, launch.getProcesses()[0] );
+                launch.addDebugTarget( target );
+            }
         }
     }
 
@@ -143,14 +134,10 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
         while( port <= 65535 )
         {
 
-            ServerSocket server;
-
             try
             {
-                server = new ServerSocket();
-
+                ServerSocket server = new ServerSocket();
                 server.bind( new InetSocketAddress( port ) );
-
                 server.close();
 
                 break;
