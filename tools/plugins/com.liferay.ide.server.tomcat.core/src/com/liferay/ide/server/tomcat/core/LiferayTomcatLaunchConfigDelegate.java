@@ -41,6 +41,7 @@ import org.osgi.framework.Version;
 /**
  * @author Gregory Amerson
  * @author Cindy Li
+ * @author Tao Tao
  */
 @SuppressWarnings( "restriction" )
 public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfigurationDelegate
@@ -72,10 +73,17 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
 
                 if( CoreUtil.compareVersions( version, ILiferayConstants.V620 ) >= 0 )
                 {
-                    retval +=
-                        NLS.bind(
-                            FM_PARAMS, LiferayDebugCore.getPreference( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ),
-                            this.freemarkerDebugPort );
+                    if( LiferayDebugCore.PREF_FM_DEBUG_PORT != null )
+                    {
+                        retval +=
+                            NLS.bind(
+                                FM_PARAMS, LiferayDebugCore.getPreference( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ),
+                                this.freemarkerDebugPort );
+                    }
+                    else
+                    {
+                        LiferayDebugCore.logError( "The freemarker debug port is invalid." ); //$NON-NLS-1$
+                    }
                 }
             }
             catch( CoreException e )
@@ -101,7 +109,14 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
         this.saveLaunchMode = mode;
         this.freemarkerDebugPort = getValidatedDebugPort();
 
-        launch.setAttribute( LiferayDebugCore.PREF_FM_DEBUG_PORT, this.freemarkerDebugPort );
+        if( this.freemarkerDebugPort != null )
+        {
+            launch.setAttribute( LiferayDebugCore.PREF_FM_DEBUG_PORT, this.freemarkerDebugPort );
+        }
+        else
+        {
+            LiferayDebugCore.logError( "Launch freemarker port is invalid." ); //$NON-NLS-1$
+        }
 
         super.launch( configuration, mode, launch, monitor );
         this.saveLaunchMode = null;
@@ -112,7 +127,7 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
         if( ILaunchManager.DEBUG_MODE.equals( mode ) && FALSE.equals( stopServer ) )
         {
             if( launch.getAttribute( LiferayDebugCore.PREF_FM_DEBUG_PORT ) != null &&
-                launch.getAttribute( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ) != null )
+                LiferayDebugCore.getPreference( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD ) != null )
             {
                 final IServer server = ServerUtil.getServer( configuration );
 
@@ -124,14 +139,20 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
 
     private String getValidatedDebugPort()
     {
+        // This method will firstly do the validation on the customized port,
+        // if the port is not valid, it will search the whole extension port from port 1025 to 65535
+        // to find another valid port, if no port is found, it returns null.
         int port = Integer.parseInt( LiferayDebugCore.getPreference( LiferayDebugCore.PREF_FM_DEBUG_PORT ) );
 
-        if( port < 1025 || port > 65535 )
+        final int lowerBound = 1024;
+        final int upperBound = 65535;
+
+        if( port <= lowerBound || port > upperBound )
         {
-            port = 1025;
+            port = lowerBound + 1;
         }
 
-        while( port <= 65535 )
+        while( port <= upperBound )
         {
 
             try
@@ -148,7 +169,7 @@ public class LiferayTomcatLaunchConfigDelegate extends TomcatLaunchConfiguration
             }
         }
 
-        if( port < 65536 )
+        if( port <= upperBound )
         {
             return String.valueOf( port );
         }
