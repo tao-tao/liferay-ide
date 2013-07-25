@@ -401,7 +401,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
     protected Properties getEntryCategories()
     {
         if( entryCategories == null )
-   {
+        {
             final IProject project = (IProject) getProperty( PROJECT );
 
             if( CoreUtil.isLiferayProject( project ) )
