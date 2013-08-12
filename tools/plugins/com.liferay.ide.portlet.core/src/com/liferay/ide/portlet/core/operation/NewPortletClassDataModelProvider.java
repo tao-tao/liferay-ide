@@ -181,7 +181,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
                             {
                                 String name = names.nextElement().toString();
 
-                                if( portletCategory.equals( name ) )
+                                if( portletCategory.matches( "\\s*" ) || portletCategory.equals( name ) )
                                 {
                                     foundDuplicate = true;
                                     break;
