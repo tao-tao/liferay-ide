@@ -20,15 +20,18 @@ import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 
 /**
  * @author Gregory Amerson
+ * @author Tao Tao
  */
 public interface DynamicElement extends HasDynamicElements
 {
@@ -212,4 +215,24 @@ public interface DynamicElement extends HasDynamicElements
     Value<String> getInstanceID();
 
     void setInstanceID( String value );
+
+    // *** DynamicContents ***
+    @Type( base = DynamicContent.class )
+    @Label( standard = "dynamic contents" )
+    @XmlListBinding
+    ( 
+        mappings = 
+        { 
+            @XmlListBinding.Mapping
+            ( 
+                element = "dynamic-content", 
+                type = DynamicContent.class 
+            ) 
+         } 
+     )
+    ListProperty PROP_DYNAMIC_CONTENT = new ListProperty( TYPE, "DynamicContents" ); //$NON-NLS-1$
+
+    ElementHandle<DynamicContent> getDynamicContent();
+
+    ElementList<DynamicContent> getDynamicContents();
 }

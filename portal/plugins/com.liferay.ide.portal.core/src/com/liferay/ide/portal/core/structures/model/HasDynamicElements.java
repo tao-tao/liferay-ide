@@ -17,6 +17,7 @@
 package com.liferay.ide.portal.core.structures.model;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
@@ -49,6 +50,8 @@ public interface HasDynamicElements extends Element
         }
     )
     ListProperty PROP_DYNAMIC_ELEMENTS = new ListProperty( TYPE, "DynamicElements" ); //$NON-NLS-1$
+
+    ElementHandle<DynamicElement> getDynamicElement();
 
     ElementList<DynamicElement> getDynamicElements();
 

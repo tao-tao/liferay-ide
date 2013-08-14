@@ -19,32 +19,20 @@ package com.liferay.ide.portal.core.structures.model;
 import com.liferay.ide.portal.core.structures.model.internal.CDATAValueBinding;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author Tao Tao
  */
-public interface DynamicContent extends Element
+public interface Option extends Element
 {
 
-    ElementType TYPE = new ElementType( DynamicContent.class );
-
-    // *** LanguageID ***
-
-    @Label( standard = "language id" )
-    @XmlBinding( path = "@dynamic-content" )
-    ValueProperty PROP_DYNAMIC_CONTENT = new ValueProperty( TYPE, "language id" ); //$NON-NLS-1$
-
-    Value<String> getLanguageID();
+    ElementType TYPE = new ElementType( Option.class );
 
     // *** Value ***
 
@@ -56,23 +44,4 @@ public interface DynamicContent extends Element
     Value<String> getValue();
 
     void setValue( String value );
-
-    // *** Options ***
-
-    @Type( base = Option.class )
-    @Label( standard = "options" )
-    @XmlListBinding
-    (
-        mappings =
-        {
-            @XmlListBinding.Mapping
-            (
-                element = "option",
-                type = Option.class
-            )
-        }
-    )
-    ListProperty PROP_OPTIONS = new ListProperty( TYPE, "Options" ); //$NON-NLS-1$
-
-    ElementList<Option> getOptions();
 }

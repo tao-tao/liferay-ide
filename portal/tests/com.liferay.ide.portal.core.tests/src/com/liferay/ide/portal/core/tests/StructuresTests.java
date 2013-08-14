@@ -4,15 +4,18 @@ package com.liferay.ide.portal.core.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.liferay.ide.portal.core.structures.model.DynamicContent;
 import com.liferay.ide.portal.core.structures.model.DynamicElement;
 import com.liferay.ide.portal.core.structures.model.DynamicElementMetadata;
 import com.liferay.ide.portal.core.structures.model.Entry;
+import com.liferay.ide.portal.core.structures.model.Option;
 import com.liferay.ide.portal.core.structures.model.Root;
 import com.liferay.ide.portal.core.structures.model.Structure;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.junit.After;
 import org.junit.Test;
@@ -49,6 +52,21 @@ public class StructuresTests extends PortalCoreTests
     static final IPath TEST_JOURNAL_CONTENT_TEXT_BOX_REPEATABLE_FIELD = new Path(
         "structures/test-journal-content-text-box-repeatable-field.xml" );
     static final IPath TEST_JOURNAL_CONTENT_TEXT_FIELD = new Path( "structures/test-journal-content-text-field.xml" );
+    static final IPath HOME_CAROUSEL = new Path( "structures/zoe-brochure-theme/journal/articles/Carousel/Home Carousel.xml" );
+    static final IPath How_DO_WE_DO_IT = new Path( "structures/zoe-brochure-theme/journal/articles/Featured Content/How Do We Do It.xml" );
+    static final IPath OUR_ACHIEVEMENTS = new Path( "structures/zoe-brochure-theme/journal/articles/Featured Content/Our Achievements.xml" );
+    static final IPath OUR_STRATEGY = new Path( "structures/zoe-brochure-theme/journal/articles/Featured Content/Our Strategy.xml" );
+    static final IPath WHO_WE_ARE = new Path( "structures/zoe-brochure-theme/journal/articles/Heading Featured Content/Who We Are.xml" );
+    static final IPath INNOVATION_FOR_OVER_30_YEARS = new Path( "structures/zoe-brochure-theme/journal/articles/Main Content/Innovating For Over 30 Years.xml" );
+    static final IPath DOWNLOAD_POD = new Path( "structures/zoe-brochure-theme/journal/articles/Pod/Download Pod.xml" );
+    static final IPath CAROUSEL = new Path( "structures/zoe-brochure-theme/journal/structures/Carousel.xml" );
+    static final IPath FEATURED_CONTENT = new Path( "structures/zoe-brochure-theme/journal/structures/Featured Content.xml" );
+    static final IPath MAIN_CONTENT = new Path( "structures/zoe-brochure-theme/journal/structures/Main Content.xml" );
+    static final IPath POD = new Path( "structures/zoe-brochure-theme/journal/structures/Pod.xml" );
+    static final IPath HEADER_SOCIAL_ARTICLES = new Path( "structures/zoe-political-theme/journal/articles/Header Social/Header Social.xml" );
+    static final IPath TWITTER_BLOCK = new Path( "structures/zoe-political-theme/journal/articles/Twitter/Twitter Block.xml" );
+    static final IPath HEADER_SOCIAL_STRUCTURES = new Path( "structures/zoe-political-theme/journal/structures/Header Social.xml" );
+    static final IPath TWITTER = new Path( "structures/zoe-political-theme/journal/structures/Twitter.xml" );
 
     private Element currentElement;
 
@@ -78,9 +96,7 @@ public class StructuresTests extends PortalCoreTests
         final Root root = element.nearest( Root.class );
 
         assertNotNull( root );
-
         assertEquals( "en_US", root.getAvailableLocales().content() );
-
         assertEquals( "en_US", root.getDefaultLocale().content() );
 
         final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
@@ -90,39 +106,31 @@ public class StructuresTests extends PortalCoreTests
         final DynamicElement dynamicElement = dynamicElements.get( 1 );
 
         assertNotNull( dynamicElement );
-
         assertEquals( "string", dynamicElement.getDataType().content( false ) );
 
         assertEquals( "ClimateForcast_COMMAND_LINE", dynamicElement.getName().content( false ) );
-
         assertEquals( "text", dynamicElement.getType().content( false ) );
 
         final DynamicElementMetadata metaData = dynamicElement.getMetadata().content( false );
 
         assertNotNull( metaData );
-
         assertEquals( "en_US", metaData.getLocale().content( false ) );
 
         final ElementList<Entry> entries = metaData.getEntries();
 
         assertNotNull( entries );
-
         assertEquals( 4, entries.size() );
 
         final Entry entry1 = entries.get( 0 );
 
         assertNotNull( entry1 );
-
         assertEquals( "label", entry1.getName().content( false ) );
-
         assertEquals( "metadata.ClimateForcast.COMMAND_LINE", entry1.getValue().content( false ) );
 
         final Entry entry2 = entries.get( 2 );
 
         assertNotNull( entry2 );
-
         assertEquals( "required", entry2.getName().content( false ) );
-
         assertEquals( "false", entry2.getValue().content( false ) );
     }
 
@@ -188,6 +196,12 @@ public class StructuresTests extends PortalCoreTests
         assertNotNull( entries );
         assertEquals( 3, entries.size() );
 
+        final Entry entry = entries.get( 1 );
+
+        assertNotNull( entry );
+        assertEquals( "predefinedValue", entry.getName().content( false ) );
+        assertEquals( "", entry.getValue().content( false ) );
+
         final ElementList<DynamicElement> childDynamicElements = dynamicElement.getDynamicElements();
 
         assertNotNull( childDynamicElements );
@@ -205,12 +219,7 @@ public class StructuresTests extends PortalCoreTests
         assertNotNull( childMetadata );
         assertEquals( "[$LOCALE_DEFAULT$]", childMetadata.getLocale().content( false ) );
 
-        final ElementList<Entry> childEntries = childMetadata.getEntries();
-
-        assertNotNull( childEntries );
-        assertEquals( 1, childEntries.size() );
-
-        final Entry childEntry = childEntries.get( 0 );
+        final Entry childEntry = metadata.getEntry().content( false );
 
         assertNotNull( childEntry );
         assertEquals( "label", childEntry.getName().content( false ) );
@@ -394,18 +403,14 @@ public class StructuresTests extends PortalCoreTests
         assertNotNull( childMetadata );
         assertEquals( "en_US", childMetadata.getLocale().content( false ) );
 
-        final ElementList<Entry> childEntries = childMetadata.getEntries();
-
-        assertNotNull( childEntries );
-        assertEquals( 1, childEntries.size() );
-
-        final Entry childEntry = childEntries.get( 0 );
+        final Entry childEntry = childMetadata.getEntry().content( false );
 
         assertNotNull( childEntry );
         assertEquals( "label", childEntry.getName().content( false ) );
         assertEquals( "2.0", childEntry.getValue().content( false ) );
     }
 
+    @Test
     public void testDynamicDataMappingStructuresRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), DYNAMIC_DATA_MAPPING_STRUCTURES, Root.TYPE );
@@ -503,7 +508,8 @@ public class StructuresTests extends PortalCoreTests
         assertEquals( "", secondEntry2.getValue().content( false ) );
     }
 
-    public void testDDMStructureAllFields() throws Exception
+    @Test
+    public void testDDMStructureAllFieldsRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_DDM_STRUCTURE_ALL_FIELDS, Root.TYPE );
 
@@ -548,12 +554,7 @@ public class StructuresTests extends PortalCoreTests
         assertEquals( "label", entry.getName().content( false ) );
         assertEquals( "Contact", entry.getValue().content( false ) );
 
-        final ElementList<DynamicElement> childDynamicElements = dynamicElement.getDynamicElements();
-
-        assertNotNull( childDynamicElements );
-        assertEquals( 1, childDynamicElements.size() );
-
-        final DynamicElement childDynamicElement = childDynamicElements.get( 0 );
+        final DynamicElement childDynamicElement = dynamicElement.getDynamicElement().content( false );
 
         assertNotNull( childDynamicElement );
         assertEquals( "string", childDynamicElement.getDataType().content( false ) );
@@ -615,75 +616,374 @@ public class StructuresTests extends PortalCoreTests
         assertEquals( "", childChildEntry.getValue().content( false ) );
     }
 
+    @Test
     public void testJournalContentBooleanRepeatableFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_BOOLEAN_REPEATABLE_FIELD, Root.TYPE );
-        
+
         setElement( element );
-        
-        Root root = element.nearest( Root.class );
-        
+
+        final Root root = element.nearest( Root.class );
+
         assertNotNull( root );
         assertEquals( "en_US", root.getAvailableLocales().content( false ) );
         assertEquals( "en_US", root.getDefaultLocale().content( false ) );
-        
-        ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
-        
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
         assertNotNull( dynamicElements );
         assertEquals( 2, dynamicElements.size() );
-        
-        DynamicElement dynamicElement =dynamicElements.get( 1 );
-        
+
+        final DynamicElement dynamicElement = dynamicElements.get( 1 );
+
         assertNotNull( dynamicElement );
         assertEquals( "1SYNQuhg", dynamicElement.getInstanceID().content( false ) );
         assertEquals( "boolean", dynamicElement.getName().content( false ) );
         assertEquals( "boolean", dynamicElement.getType().content( false ) );
         assertEquals( "keyword", dynamicElement.getIndexType().content( false ) );
-        
-        
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "", dynamicContent.getValue().content( false ) );
     }
-    
+
+    @Test
     public void testJournalContentDocLibraryFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_DOC_LIBRARY_FIELD, Root.TYPE );
-        
-        
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 1, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "4aGOvP3N", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "document_library", dynamicElement.getType().content( false ) );
+        assertEquals( "text", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "", dynamicContent.getValue().content( false ) );
     }
-    
+
+    @Test
     public void testJournalContentLinkToPageFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_LINK_TO_PAGE_FIELD, Root.TYPE );
-        
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 1, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "MiO7vIJu", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "link_to_layout", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "1@public", dynamicContent.getValue().content( false ) );
     }
-    
-    public void testJournalContentListField() throws Exception
+
+    @Test
+    public void testJournalContentListFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_LIST_FIELD, Root.TYPE );
-        
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 1, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "pcm9WPVX", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "list", dynamicElement.getName().content( false ) );
+        assertEquals( "list", dynamicElement.getType().content( false ) );
+        assertEquals( "keyword", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "a", dynamicContent.getValue().content( false ) );
     }
-    
-    public void testJournalContentMultiListField() throws Exception
+
+    @Test
+    public void testJournalContentMultiListFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_MULTI_LIST_FIELD, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 1, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "9X5wVsSv", dynamicElement.getInstanceID() );
+        assertEquals( "multi-list", dynamicElement.getName().content( false ) );
+        assertEquals( "keyword", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+
+        final ElementList<Option> options = dynamicContent.getOptions();
+
+        assertNotNull( options );
+        assertEquals( 2, options.size() );
+
+        final Option option = options.get( 1 );
+
+        assertNotNull( option );
+        assertEquals( "b", option.getValue().content( false ) );
     }
-    
-    public void testJournalContentNestedFields() throws Exception
+
+    @Test
+    public void testJournalContentNestedFieldsRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_NESTED_FIELDS, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US,pt_BR", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 2, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "RF3do1m5", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "contact", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "text", dynamicElement.getIndexType().content( false ) );
+
+        final ElementList<DynamicElement> childDynamicElements = dynamicElement.getDynamicElements();
+
+        assertNotNull( childDynamicElements );
+        assertEquals( 3, childDynamicElements.size() );
+
+        final DynamicElement childDynamicElement = childDynamicElements.get( 0 );
+
+        assertNotNull( childDynamicElement );
+        assertEquals( "QK6B0wK9", childDynamicElement.getInstanceID().content( false ) );
+        assertEquals( "phone", childDynamicElement.getName().content( false ) );
+        assertEquals( "text", childDynamicElement.getType().content( false ) );
+        assertEquals( "text", childDynamicElement.getIndexType().content( false ) );
+
+        final DynamicElement childChildDynamicElement = dynamicElements.get( 1 );
+
+        assertNotNull( childChildDynamicElement );
+        assertEquals( "8uxzZl41", childChildDynamicElement.getInstanceID().content( false ) );
+        assertEquals( "ext", childChildDynamicElement.getName().content( false ) );
+        assertEquals( "text", childChildDynamicElement.getType().content( false ) );
+        assertEquals( "text", childChildDynamicElement.getIndexType().content( false ) );
+
+        final ElementList<DynamicContent> dynamicContents = dynamicElement.getDynamicContents();
+
+        assertNotNull( dynamicContents );
+        assertEquals( 2, dynamicContents.size() );
+
+        final DynamicContent dynamicContent = dynamicContents.get( 0 );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "2", dynamicContent.getValue().content( false ) );
     }
-    
-    public void testJournalContentTextAreaField() throws Exception
+
+    @Test
+    public void testJournalContentTextAreaFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_TEXT_AREA_FIELD, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 1, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "RFnJ1nCn", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "text_area", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "text", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "en_US", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "<p>Hello World!</p>", dynamicContent.getValue().content( false ) );
     }
-    
-    public void testJournalContentTextBoxRepeatableField() throws Exception
+
+    @Test
+    public void testJournalContentTextBoxRepeatableFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_TEXT_BOX_REPEATABLE_FIELD, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US,pt_BR", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertEquals( 3, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 1 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "HvemvQgl", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "text_box", dynamicElement.getName().content( false ) );
+        assertEquals( "text_box", dynamicElement.getType().content( false ) );
+        assertEquals( "text", dynamicElement.getIndexType().content( false ) );
+
+        final ElementList<DynamicContent> dynamicContents = dynamicElement.getDynamicContents();
+
+        assertNotNull( dynamicContents );
+        assertEquals( 2, dynamicContents.size() );
+
+        final DynamicContent dynamicContent = dynamicContents.get( 1 );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "pt_BR", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "dois", dynamicContent.getValue().content( false ) );
     }
-    
-    public void testJournalContentTextField() throws Exception
+
+    @Test
+    public void testJournalContentTextFieldRead() throws Exception
     {
         final Element element = getElementFromFile( getCurrentProject(), TEST_JOURNAL_CONTENT_TEXT_FIELD, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US,pt_BR", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 1, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "bf4sdx6Q", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "text", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "text", dynamicElement.getIndexType().content( false ) );
+
+        final ElementList<DynamicContent> dynamicContents = dynamicElement.getDynamicContents();
+
+        assertNotNull( dynamicContents );
+        assertEquals( 2, dynamicContents.size() );
+
+        final DynamicContent dynamicContent = dynamicContents.get( 1 );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "pt_BR", dynamicContent.getLanguageID().content( false ) );
+        assertEquals( "um", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testHomeCarouselRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), HOME_CAROUSEL, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 7, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 5 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "KvW92QWJ", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "document_library", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "[$FILE=image2.png$]", dynamicContent.getValue().content( false ) );
+
+        final DynamicElement childDynamicElement = dynamicElement
     }
 }
