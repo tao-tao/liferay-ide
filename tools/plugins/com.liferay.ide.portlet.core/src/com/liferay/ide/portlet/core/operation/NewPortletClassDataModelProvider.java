@@ -171,7 +171,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
                     {
                         for( String portletCategory : portletCategories )
                         {
-                            if( foundValidatedCategory( portletCategory ) == null )
+                            if( findValidatedCategory( portletCategory ) == null )
                             {
                                 categories.put( portletCategory, portletCategory );
                             }
@@ -730,10 +730,8 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
         return retval;
     }
 
-    private String foundValidatedCategory( String portletCategory )
+    private String findValidatedCategory( final String portletCategory )
     {
-        portletCategory = portletCategory.trim();
-
         Enumeration<?> names = categories.propertyNames();
         Enumeration<?> values = categories.elements();
 
@@ -744,7 +742,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
             String name = names.nextElement().toString();
             String value = values.nextElement().toString();
 
-            if( portletCategory.equals( name ) || portletCategory.equals( value ) )
+            if( portletCategory.trim().equals( name ) || portletCategory.trim().equals( value ) )
             {
                 retval = name;
                 break;
@@ -891,7 +889,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
         }
         else if( CATEGORY.equals( propertyName ) )
         {
-            String portletCategory = foundValidatedCategory( propertyValue.toString() );
+            String portletCategory = findValidatedCategory( propertyValue.toString() );
 
             if( portletCategory != null )
             {
