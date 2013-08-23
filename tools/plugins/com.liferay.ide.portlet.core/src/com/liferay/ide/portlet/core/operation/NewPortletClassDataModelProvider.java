@@ -171,9 +171,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
                     {
                         for( String portletCategory : portletCategories )
                         {
-                            portletCategory = portletCategory.trim();
-
-                            if( !foundDuplicate( portletCategory ) )
+                            if( foundValidatedCategory( portletCategory ) == null )
                             {
                                 categories.put( portletCategory, portletCategory );
                             }
@@ -732,10 +730,14 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
         return retval;
     }
 
-    private boolean foundDuplicate( String portletCategory )
+    private String foundValidatedCategory( String portletCategory )
     {
+        portletCategory = portletCategory.trim();
+
         Enumeration<?> names = categories.propertyNames();
         Enumeration<?> values = categories.elements();
+
+        String retval = null;
 
         while( names.hasMoreElements() && values.hasMoreElements() )
         {
@@ -744,31 +746,12 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
 
             if( portletCategory.equals( name ) || portletCategory.equals( value ) )
             {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private String matchDuplicate( String portletCategory )
-    {
-        Enumeration<?> names = categories.propertyNames();
-        Enumeration<?> values = categories.elements();
-
-        while( names.hasMoreElements() && values.hasMoreElements() )
-        {
-            String name = names.nextElement().toString();
-            String value = values.nextElement().toString();
-
-            if( portletCategory.equals( name ) || portletCategory.equals( value ) )
-            {
-                portletCategory = name;
+                retval = name;
                 break;
             }
         }
 
-        return portletCategory;
+        return retval;
     }
 
     @Override
@@ -908,11 +891,11 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
         }
         else if( CATEGORY.equals( propertyName ) )
         {
-            String portletCategory = propertyValue.toString().trim();
+            String portletCategory = foundValidatedCategory( propertyValue.toString() );
 
-            if( foundDuplicate( portletCategory ) )
+            if( portletCategory != null )
             {
-                getDataModel().setProperty( CATEGORY, matchDuplicate( portletCategory ) );
+                getDataModel().setProperty( CATEGORY, portletCategory );
             }
 
             return true;

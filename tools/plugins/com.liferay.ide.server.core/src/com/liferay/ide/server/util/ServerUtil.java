@@ -92,7 +92,7 @@ public class ServerUtil
 {
 
     private static final Version v6110 = ILiferayConstants.V6110;
-//    private static final Version v6120 = new Version( 6, 1, 20 );
+    // private static final Version v6120 = new Version( 6, 1, 20 );
 
     private static final Version v612 = ILiferayConstants.V612;
 
@@ -138,49 +138,49 @@ public class ServerUtil
     {
         switch( resource.getType() )
         {
-            case IResource.FILE:
-                ZipEntry zipEntry = new ZipEntry( path.toString() );
+        case IResource.FILE:
+            ZipEntry zipEntry = new ZipEntry( path.toString() );
 
-                zip.putNextEntry( zipEntry );
+            zip.putNextEntry( zipEntry );
 
-                InputStream contents = ( (IFile) resource ).getContents();
+            InputStream contents = ( (IFile) resource ).getContents();
 
-                if( adjustGMTOffset )
-                {
-                    TimeZone currentTimeZone = TimeZone.getDefault();
-                    Calendar currentDt = new GregorianCalendar( currentTimeZone, Locale.getDefault() );
+            if( adjustGMTOffset )
+            {
+                TimeZone currentTimeZone = TimeZone.getDefault();
+                Calendar currentDt = new GregorianCalendar( currentTimeZone, Locale.getDefault() );
 
-                    // Get the Offset from GMT taking current TZ into account
-                    int gmtOffset =
-                        currentTimeZone.getOffset(
-                            currentDt.get( Calendar.ERA ), currentDt.get( Calendar.YEAR ),
-                            currentDt.get( Calendar.MONTH ), currentDt.get( Calendar.DAY_OF_MONTH ),
-                            currentDt.get( Calendar.DAY_OF_WEEK ), currentDt.get( Calendar.MILLISECOND ) );
+                // Get the Offset from GMT taking current TZ into account
+                int gmtOffset =
+                    currentTimeZone.getOffset(
+                        currentDt.get( Calendar.ERA ), currentDt.get( Calendar.YEAR ), currentDt.get( Calendar.MONTH ),
+                        currentDt.get( Calendar.DAY_OF_MONTH ), currentDt.get( Calendar.DAY_OF_WEEK ),
+                        currentDt.get( Calendar.MILLISECOND ) );
 
-                    zipEntry.setTime( System.currentTimeMillis() + ( gmtOffset * -1 ) );
-                }
+                zipEntry.setTime( System.currentTimeMillis() + ( gmtOffset * -1 ) );
+            }
 
-                try
-                {
-                    IOUtils.copy( contents, zip );
-                }
-                finally
-                {
-                    contents.close();
-                }
+            try
+            {
+                IOUtils.copy( contents, zip );
+            }
+            finally
+            {
+                contents.close();
+            }
 
-                break;
+            break;
 
-            case IResource.FOLDER:
-            case IResource.PROJECT:
-                IContainer container = (IContainer) resource;
+        case IResource.FOLDER:
+        case IResource.PROJECT:
+            IContainer container = (IContainer) resource;
 
-                IResource[] members = container.members();
+            IResource[] members = container.members();
 
-                for( IResource res : members )
-                {
-                    addToZip( path.append( res.getName() ), res, zip, adjustGMTOffset );
-                }
+            for( IResource res : members )
+            {
+                addToZip( path.append( res.getName() ), res, zip, adjustGMTOffset );
+            }
         }
     }
 
@@ -361,7 +361,7 @@ public class ServerUtil
         return retval;
     }
 
-    public static Properties getCategories( IPath portalDir )
+    public static Properties getPortletCategories( IPath portalDir )
     {
         Properties retval = null;
 
@@ -376,19 +376,42 @@ public class ServerUtil
                 Properties props = new Properties();
                 props.load( jar.getInputStream( jar.getEntry( "content/Language.properties" ) ) ); //$NON-NLS-1$
                 Enumeration<?> names = props.propertyNames();
+                String[] controlPanelCategories = { "category.my", //$NON-NLS-1$
+                    "category.users", //$NON-NLS-1$
+                    "category.apps", //$NON-NLS-1$
+                    "category.configuration", //$NON-NLS-1$
+                    "category.sites", //$NON-NLS-1$
+                    "category.site_administration.configuration", //$NON-NLS-1$
+                    "category.site_administration.content", //$NON-NLS-1$
+                    "category.site_administration.pages", //$NON-NLS-1$
+                    "category.site_administration.users" //$NON-NLS-1$
+                };
 
                 while( names.hasMoreElements() )
                 {
+                    boolean isControlPanelCategory = false;
+
                     String name = names.nextElement().toString();
 
                     if( name.startsWith( "category." ) ) //$NON-NLS-1$
                     {
-                        categories.put( name, props.getProperty( name ) );
+                        for( String category : controlPanelCategories )
+                        {
+                            if( name.equals( category ) )
+                            {
+                                isControlPanelCategory = true;
+                                break;
+                            }
+                        }
+
+                        if( !isControlPanelCategory )
+                        {
+                            categories.put( name, props.getProperty( name ) );
+                        }
                     }
                 }
 
                 retval = categories;
-
             }
             catch( IOException e )
             {
@@ -401,7 +424,7 @@ public class ServerUtil
 
     public static Properties getEntryCategories( IPath portalDir, String portalVersion )
     {
-        Properties categories = getCategories( portalDir );
+        Properties categories = getPortletCategories( portalDir );
 
         Properties retval = new Properties();
 
@@ -630,8 +653,7 @@ public class ServerUtil
 
         properties.put( ISDKConstants.PROPERTY_APP_SERVER_TYPE, type );
 
-        final String appServerDirKey =
-            getAppServerPropertyKey( ISDKConstants.PROPERTY_APP_SERVER_DIR, appServer );
+        final String appServerDirKey = getAppServerPropertyKey( ISDKConstants.PROPERTY_APP_SERVER_DIR, appServer );
         final String appServerDeployDirKey =
             getAppServerPropertyKey( ISDKConstants.PROPERTY_APP_SERVER_DEPLOY_DIR, appServer );
         final String appServerLibGlobalDirKey =
@@ -781,6 +803,7 @@ public class ServerUtil
     {
         return getLiferayRuntime( server ) != null;
     }
+
     public static boolean isValidPropertiesFile( File file )
     {
         if( file == null || !file.exists() )
@@ -800,6 +823,7 @@ public class ServerUtil
         return true;
 
     }
+
     private static void processResourceDeltasZip(
         IModuleResourceDelta[] deltas, ZipOutputStream zip, Map<ZipEntry, String> deleteEntries, String deletePrefix,
         String deltaPrefix, boolean adjustGMTOffset ) throws IOException, CoreException
