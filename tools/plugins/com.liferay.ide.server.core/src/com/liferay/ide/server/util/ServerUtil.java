@@ -376,6 +376,7 @@ public class ServerUtil
                 Properties props = new Properties();
                 props.load( jar.getInputStream( jar.getEntry( "content/Language.properties" ) ) ); //$NON-NLS-1$
                 Enumeration<?> names = props.propertyNames();
+
                 String[] controlPanelCategories = 
                 {   "category.my", //$NON-NLS-1$
                     "category.users", //$NON-NLS-1$

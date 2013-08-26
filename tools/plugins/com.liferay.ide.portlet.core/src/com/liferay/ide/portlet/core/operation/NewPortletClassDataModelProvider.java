@@ -171,7 +171,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
                     {
                         for( String portletCategory : portletCategories )
                         {
-                            if( findValidatedCategory( portletCategory ) == null )
+                            if( findExistingCategory( portletCategory ) == null )
                             {
                                 categories.put( portletCategory, portletCategory );
                             }
@@ -730,21 +730,23 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
         return retval;
     }
 
-    private String findValidatedCategory( final String portletCategory )
+    private String findExistingCategory( final String portletCategory )
     {
-        Enumeration<?> names = categories.propertyNames();
+        //Check the value and key for each category, if the category's value or key is the same with 
+        //the original one, return the String value of key.
+        Enumeration<?> keys = categories.propertyNames();
         Enumeration<?> values = categories.elements();
-
+        String checkedCategory = portletCategory.trim();
         String retval = null;
-
-        while( names.hasMoreElements() && values.hasMoreElements() )
+ 
+        while( keys.hasMoreElements() && values.hasMoreElements() )
         {
-            String name = names.nextElement().toString();
-            String value = values.nextElement().toString();
+            Object key = keys.nextElement();
+            Object value = values.nextElement();
 
-            if( portletCategory.trim().equals( name ) || portletCategory.trim().equals( value ) )
+            if( checkedCategory.equals( key ) || checkedCategory.equals( value ) )
             {
-                retval = name;
+                retval = key.toString();
                 break;
             }
         }
@@ -889,7 +891,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
         }
         else if( CATEGORY.equals( propertyName ) )
         {
-            String portletCategory = findValidatedCategory( propertyValue.toString() );
+            String portletCategory = findExistingCategory( propertyValue.toString() );
 
             if( portletCategory != null )
             {
