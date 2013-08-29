@@ -64,7 +64,11 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
 
     public static final String MESSAGE_PORTLET_NAME_NOT_FOUND = Msgs.portletIdNotMatchPortletName;
 
+    public static final String MESSAGE_CATEGORY_NAME_IS_EMPTY = Msgs.categoryNameInvalid;
+
     public static final String PORTLET_ELEMENT = "portlet"; //$NON-NLS-1$
+
+    public static final String CATEGORY_ELEMENT = "category";
 
     public static final String PORTLET_NAME_ELEMENT = "portlet-name"; //$NON-NLS-1$
 
@@ -201,6 +205,48 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
         }
     }
 
+    protected void checkCategoryName(
+        IDOMDocument liferayDisplayDocument, Node categoryNameNode, IScopeContext[] preferenceScopes,
+        String validationKey, String errorMessage, List<Map<String, Object>> problems )
+    {
+        Node categoryName = categoryNameNode.getAttributes().getNamedItem( "name" );
+
+        if( categoryName != null )
+        {
+            String categoryNameValue = categoryName.getNodeValue();
+
+            if( categoryNameValue.matches( "\\s*" ) )
+            {
+                String msg = MessageFormat.format( errorMessage, new Object[] { categoryNameValue } );
+
+                Map<String, Object> problem =
+                    createMarkerValues(
+                        PREFERENCE_NODE_QUALIFIER, preferenceScopes, validationKey, (IDOMNode) categoryName, msg );
+
+                if( problem != null )
+                {
+                    problems.add( problem );
+                }
+            }
+        }
+    }
+
+    protected void checkCategoryNames(
+        IDOMDocument liferayDisplayDocument, IScopeContext[] preferenceScopes, List<Map<String, Object>> problems )
+    {
+        NodeList elements = liferayDisplayDocument.getElementsByTagName( CATEGORY_ELEMENT );
+
+        for( int i = 0; i < elements.getLength(); i++ )
+        {
+            Node categoryElement = elements.item( i );
+
+            checkCategoryName(
+                liferayDisplayDocument, categoryElement, preferenceScopes,
+                ValidationPreferences.LIFERAY_DISPLAY_XML_CATEGORY_NAME_INVALID, MESSAGE_CATEGORY_NAME_IS_EMPTY,
+                problems );
+        }
+    }
+
     @SuppressWarnings( "unchecked" )
     protected Map<String, Object>[] detectProblems(
         IFile liferayDisplayXml, IFile portletXml, IScopeContext[] preferenceScopes ) throws CoreException
@@ -229,6 +275,7 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
                         IDOMDocument portletXmlDocument = ( (IDOMModel) portletXmlModel ).getDocument();
 
                         checkPortletIds( liferayDisplayDocument, portletXmlDocument, preferenceScopes, problems );
+                        checkCategoryNames( liferayDisplayDocument, preferenceScopes, problems );
                     }
                 }
             }
@@ -258,6 +305,7 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
     private static class Msgs extends NLS
     {
         public static String portletIdNotMatchPortletName;
+        public static String categoryNameInvalid;
 
         static
         {
