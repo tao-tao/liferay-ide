@@ -55,6 +55,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author Greg Amerson
  * @author Cindy Li
+ * @author Tao Tao
  */
 @SuppressWarnings( "restriction" )
 public class LiferayDisplayDescriptorValidator extends BaseValidator
@@ -64,7 +65,7 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
 
     public static final String MESSAGE_PORTLET_NAME_NOT_FOUND = Msgs.portletIdNotMatchPortletName;
 
-    public static final String MESSAGE_CATEGORY_NAME_IS_EMPTY = Msgs.categoryNameInvalid;
+    public static final String MESSAGE_CATEGORY_NAME_IS_EMPTY = Msgs.categoryNameCannotBeEmpty;
 
     public static final String PORTLET_ELEMENT = "portlet"; //$NON-NLS-1$
 
@@ -304,8 +305,8 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
 
     private static class Msgs extends NLS
     {
+        public static String categoryNameCannotBeEmpty;
         public static String portletIdNotMatchPortletName;
-        public static String categoryNameInvalid;
 
         static
         {
