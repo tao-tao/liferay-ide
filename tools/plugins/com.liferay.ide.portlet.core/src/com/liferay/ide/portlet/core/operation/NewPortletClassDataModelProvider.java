@@ -743,7 +743,7 @@ public class NewPortletClassDataModelProvider extends NewWebClassDataModelProvid
             Object key = keys.nextElement();
             Object value = categories.get( key );
 
-            if( trimmedCategory.equals( key ) | trimmedCategory.equals( value ) )
+            if( trimmedCategory.equals( key ) || trimmedCategory.equals( value ) )
             {
                 retval = key.toString();
                 break;
