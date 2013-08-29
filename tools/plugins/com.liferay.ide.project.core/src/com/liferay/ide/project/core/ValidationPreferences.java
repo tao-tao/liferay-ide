@@ -18,11 +18,11 @@ package com.liferay.ide.project.core;
 public class ValidationPreferences
 {
 
-    public static final String LIFERAY_DISPLAY_XML_PORTLET_ID_NOT_FOUND =
-        "validation-liferay-display-xml-portlet-id-not-found"; //$NON-NLS-1$
-
     public static final String LIFERAY_DISPLAY_XML_CATEGORY_NAME_INVALID =
         "validation-liferay-display-xml-category-name-invalid"; //$NON-NLS-1$
+
+    public static final String LIFERAY_DISPLAY_XML_PORTLET_ID_NOT_FOUND =
+        "validation-liferay-display-xml-portlet-id-not-found"; //$NON-NLS-1$
 
     public static final String LIFERAY_HOOK_XML_CLASS_NOT_FOUND = "validation-liferay-hook-xml-class-not-found"; //$NON-NLS-1$
 

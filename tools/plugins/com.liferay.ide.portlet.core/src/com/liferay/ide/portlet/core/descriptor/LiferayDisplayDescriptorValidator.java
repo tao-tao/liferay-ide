@@ -61,15 +61,15 @@ import org.w3c.dom.NodeList;
 public class LiferayDisplayDescriptorValidator extends BaseValidator
 {
 
-    public static final String MARKER_TYPE = "com.liferay.ide.portlet.core.liferayDisplayDescriptorMarker"; //$NON-NLS-1$
+    public static final String CATEGORY_ELEMENT = "category";
 
-    public static final String MESSAGE_PORTLET_NAME_NOT_FOUND = Msgs.portletIdNotMatchPortletName;
+    public static final String MARKER_TYPE = "com.liferay.ide.portlet.core.liferayDisplayDescriptorMarker"; //$NON-NLS-1$
 
     public static final String MESSAGE_CATEGORY_NAME_IS_EMPTY = Msgs.categoryNameCannotBeEmpty;
 
-    public static final String PORTLET_ELEMENT = "portlet"; //$NON-NLS-1$
+    public static final String MESSAGE_PORTLET_NAME_NOT_FOUND = Msgs.portletIdNotMatchPortletName;
 
-    public static final String CATEGORY_ELEMENT = "category";
+    public static final String PORTLET_ELEMENT = "portlet"; //$NON-NLS-1$
 
     public static final String PORTLET_NAME_ELEMENT = "portlet-name"; //$NON-NLS-1$
 
@@ -143,6 +143,48 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
         return result;
     }
 
+    protected void checkCategoryName(
+        IDOMDocument liferayDisplayDocument, Node categoryNameNode, IScopeContext[] preferenceScopes,
+        String validationKey, String errorMessage, List<Map<String, Object>> problems )
+    {
+        Node categoryName = categoryNameNode.getAttributes().getNamedItem( "name" );
+
+        if( categoryName != null )
+        {
+            String categoryNameValue = categoryName.getNodeValue();
+
+            if( categoryNameValue.matches( "\\s*" ) )
+            {
+                String msg = MessageFormat.format( errorMessage, new Object[] { categoryNameValue } );
+
+                Map<String, Object> problem =
+                    createMarkerValues(
+                        PREFERENCE_NODE_QUALIFIER, preferenceScopes, validationKey, (IDOMNode) categoryName, msg );
+
+                if( problem != null )
+                {
+                    problems.add( problem );
+                }
+            }
+        }
+    }
+
+    protected void checkCategoryNames(
+        IDOMDocument liferayDisplayDocument, IScopeContext[] preferenceScopes, List<Map<String, Object>> problems )
+    {
+        NodeList elements = liferayDisplayDocument.getElementsByTagName( CATEGORY_ELEMENT );
+
+        for( int i = 0; i < elements.getLength(); i++ )
+        {
+            Node categoryElement = elements.item( i );
+
+            checkCategoryName(
+                liferayDisplayDocument, categoryElement, preferenceScopes,
+                ValidationPreferences.LIFERAY_DISPLAY_XML_CATEGORY_NAME_INVALID, MESSAGE_CATEGORY_NAME_IS_EMPTY,
+                problems );
+        }
+    }
+
     protected void checkPortletId(
         IDOMDocument portletXmlDocument, Node portletIdNode, IScopeContext[] preferenceScopes, String validationKey,
         String errorMessage, List<Map<String, Object>> problems )
@@ -202,48 +244,6 @@ public class LiferayDisplayDescriptorValidator extends BaseValidator
             checkPortletId(
                 portletXmlDocument, portletElement, preferenceScopes,
                 ValidationPreferences.LIFERAY_DISPLAY_XML_PORTLET_ID_NOT_FOUND, MESSAGE_PORTLET_NAME_NOT_FOUND,
-                problems );
-        }
-    }
-
-    protected void checkCategoryName(
-        IDOMDocument liferayDisplayDocument, Node categoryNameNode, IScopeContext[] preferenceScopes,
-        String validationKey, String errorMessage, List<Map<String, Object>> problems )
-    {
-        Node categoryName = categoryNameNode.getAttributes().getNamedItem( "name" );
-
-        if( categoryName != null )
-        {
-            String categoryNameValue = categoryName.getNodeValue();
-
-            if( categoryNameValue.matches( "\\s*" ) )
-            {
-                String msg = MessageFormat.format( errorMessage, new Object[] { categoryNameValue } );
-
-                Map<String, Object> problem =
-                    createMarkerValues(
-                        PREFERENCE_NODE_QUALIFIER, preferenceScopes, validationKey, (IDOMNode) categoryName, msg );
-
-                if( problem != null )
-                {
-                    problems.add( problem );
-                }
-            }
-        }
-    }
-
-    protected void checkCategoryNames(
-        IDOMDocument liferayDisplayDocument, IScopeContext[] preferenceScopes, List<Map<String, Object>> problems )
-    {
-        NodeList elements = liferayDisplayDocument.getElementsByTagName( CATEGORY_ELEMENT );
-
-        for( int i = 0; i < elements.getLength(); i++ )
-        {
-            Node categoryElement = elements.item( i );
-
-            checkCategoryName(
-                liferayDisplayDocument, categoryElement, preferenceScopes,
-                ValidationPreferences.LIFERAY_DISPLAY_XML_CATEGORY_NAME_INVALID, MESSAGE_CATEGORY_NAME_IS_EMPTY,
                 problems );
         }
     }
