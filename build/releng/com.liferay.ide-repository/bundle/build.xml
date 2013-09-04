@@ -16,19 +16,81 @@
     <property file="bundle.${env.HOSTNAME}.properties" />
     <property file="bundle.properties" />
 
-	<path id="lib.classpath">
-		<fileset dir="${basedir}/bundle/lib" includes="*.jar" />
-	</path>
-
-	<taskdef classpathref="lib.classpath" resource="net/sf/antcontrib/antlib.xml" />
-
 	<property environment="env" />
-
-	<property file="${basedir}/bundle/bundle.properties" />
 
 	<property name="package.target" value="output-zip"/>
 
-	<target name="all" if="create.bundles">
+	<target name="all">
+
+		<condition property="lib-classpath-available">
+			<available file="${basedir}/lib" type="dir"/>
+		</condition>
+
+		<condition property="bundle-directory-available">
+			<available file="${basedir}/bundle" type="dir"/>
+		</condition>
+
+		<antcall target="set-lib-classpath"/>
+		<antcall target="set-bundle-lib-classpath"/>
+	</target>
+
+    <target name="set-lib-classpath" if="lib-classpath-available">
+		<path id="lib.classpath">
+			<fileset dir="${basedir}/lib" includes="*.jar" />
+		</path>
+
+		<taskdef classpathref="lib.classpath" resource="net/sf/antcontrib/antlib.xml" />
+
+		<property file="${basedir}/bundle.properties" />
+
+		<path id="bundle.name.path">
+			<fileset dir="${basedir}/../target/composite/tools/plugins">
+				<include name="com.liferay.ide.core*"/>
+			</fileset>
+		</path>
+
+    	<property name="bundle.name" value="${toString:bundle.name.path}"/>
+
+    	<antcall target="task"/>
+    </target>
+
+    <target name="set-bundle-lib-classpath" if="bundle-directory-available">
+    	<path id="lib.classpath">
+    		<fileset dir="${basedir}/bundle/lib" includes="*.jar" />
+    	</path>
+
+    	<taskdef classpathref="lib.classpath" resource="net/sf/antcontrib/antlib.xml" />
+
+    	<property name="rootdir" value="${basedir}/bundle"/>
+
+    	<property name="target.dir" value="${basedir}/target"/>
+    	<property file="${basedir}/bundle/bundle.properties" />
+
+    	<path id="bundle.name.path">
+    		<fileset dir="${basedir}/target/composite/tools/plugins">
+    			<include name="com.liferay.ide.core*"/>
+    		</fileset>
+    	</path>
+
+    	<property name="bundle.name" value="${toString:bundle.name.path}"/>
+
+    	<antcall target="task"/>
+    </target>
+
+    <target name="task">
+    	<propertyregex property="version"  input="${bundle.name}"
+    		regexp=".*com.liferay.ide.core_(.*).jar" replace="\1"/>
+
+    	<property name="output.win32.zip.name" value="eclipse_Liferay_IDE_${version}-windows.zip"/>
+    	<property name="output.linux.tar.name" value="eclipse_Liferay_IDE_${version}-linux.tar"/>
+    	<property name="output.linux.gz.name" value="eclipse_Liferay_IDE_${version}-linux.tar.gz"/>
+    	<property name="output.macosx.tar.name" value="eclipse_Liferay_IDE_${version}-macosx.tar"/>
+    	<property name="output.macosx.gz.name" value="eclipse_Liferay_IDE_${version}-macosx.tar.gz"/>
+    	<property name="output.win64.zip.name" value="eclipse_Liferay_IDE_${version}-windows-x86_64.zip"/>
+    	<property name="output.linux64.tar.name" value="eclipse_Liferay_IDE_${version}-linux-x86_64.tar"/>
+    	<property name="output.linux64.gz.name" value="eclipse_Liferay_IDE_${version}-linux-x86_64.tar.gz"/>
+    	<property name="output.macosx64.tar.name" value="eclipse_Liferay_IDE_${version}-macosx-x86_64.tar"/>
+    	<property name="output.macosx64.gz.name" value="eclipse_Liferay_IDE_${version}-macosx-x86_64.tar.gz"/>
 
         <antcall target="win64" />
         <antcall target="win32" />
@@ -47,6 +109,10 @@
 		</if>
 	</target>
 
+    <target name="maven-build" if="create.bundles">
+    	<antcall target="all"/>
+    </target>
+
 	<target name="create-bundle">
 		<antcall target="install-features" />
 		<antcallback target="${package.target}" return="final.name" />
@@ -62,8 +128,7 @@
 		<propertyregex property="version" input="${updatesite.zip}"
 			regexp=".*Liferay_IDE_(.*)-updatesite.zip$" replace="\1" />
 
-		<propertyregex property="final.name.versioned"  input="${final.name}"
-			regexp="(.*eclipse_Liferay_IDE_)(.*SNAPSHOT)(-.*)$" replace="\1${version}\3"/>
+    	<property name="final.name.versioned"  value="${final.name}" />
 
 		<move file="${final.name}" tofile="${final.name.versioned}" />
 

@@ -77,7 +77,7 @@
                                 <property name="plugin_classpath" refid="maven.plugin.classpath" />
 
                                 <ant antfile="${basedir}/bundle/build.xml">
-                                    <target name="all" />
+                                    <target name="maven-build" />
                                 </ant>
                             </target>
                         </configuration>
