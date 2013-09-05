@@ -20,52 +20,27 @@
 
 	<property name="package.target" value="output-zip"/>
 
-	<target name="all">
-
-		<condition property="lib-classpath-available">
-			<available file="${basedir}/lib" type="dir"/>
-		</condition>
-
-		<condition property="bundle-directory-available">
-			<available file="${basedir}/bundle" type="dir"/>
-		</condition>
-
-		<antcall target="set-lib-classpath"/>
-		<antcall target="set-bundle-lib-classpath"/>
-	</target>
-
-    <target name="set-lib-classpath" if="lib-classpath-available">
-		<path id="lib.classpath">
-			<fileset dir="${basedir}/lib" includes="*.jar" />
-		</path>
-
-		<taskdef classpathref="lib.classpath" resource="net/sf/antcontrib/antlib.xml" />
-
-		<property file="${basedir}/bundle.properties" />
-
-		<path id="bundle.name.path">
-			<fileset dir="${basedir}/../target/composite/tools/plugins">
-				<include name="com.liferay.ide.core*"/>
-			</fileset>
-		</path>
-
-    	<property name="bundle.name" value="${toString:bundle.name.path}"/>
-
-    	<antcall target="task"/>
-    </target>
-
-    <target name="set-bundle-lib-classpath" if="bundle-directory-available">
+    <target name="all">
     	<path id="lib.classpath">
-    		<fileset dir="${basedir}/bundle/lib" includes="*.jar" />
+    		<fileset dir="${basedir}/lib" includes="*.jar" />
+    	</path>
+
+    	<path id="bundle.name.path">
+    		<fileset dir="${basedir}/../target/composite/tools/plugins">
+    			<include name="com.liferay.ide.core*"/>
+    		</fileset>
     	</path>
 
     	<taskdef classpathref="lib.classpath" resource="net/sf/antcontrib/antlib.xml" />
 
-    	<property name="rootdir" value="${basedir}/bundle"/>
+    	<property name="bundle.name" value="${toString:bundle.name.path}"/>
 
-    	<property name="target.dir" value="${basedir}/target"/>
-    	<property file="${basedir}/bundle/bundle.properties" />
+    	<property file="${basedir}/bundle.properties" />
 
+    	<antcall target="bundle"/>
+    </target>
+
+    <target name="maven-build" if="create.bundles">
     	<path id="bundle.name.path">
     		<fileset dir="${basedir}/target/composite/tools/plugins">
     			<include name="com.liferay.ide.core*"/>
@@ -74,10 +49,16 @@
 
     	<property name="bundle.name" value="${toString:bundle.name.path}"/>
 
-    	<antcall target="task"/>
+    	<property name="rootdir" value="${basedir}/bundle"/>
+
+    	<property name="target.dir" value="${basedir}/target"/>
+
+    	<property file="${basedir}/bundle/bundle.properties" />
+
+    	<antcall target="bundle"/>
     </target>
 
-    <target name="task">
+    <target name="bundle">
     	<propertyregex property="version"  input="${bundle.name}"
     		regexp=".*com.liferay.ide.core_(.*).jar" replace="\1"/>
 
@@ -108,10 +89,6 @@
 			</then>
 		</if>
 	</target>
-
-    <target name="maven-build" if="create.bundles">
-    	<antcall target="all"/>
-    </target>
 
 	<target name="create-bundle">
 		<antcall target="install-features" />

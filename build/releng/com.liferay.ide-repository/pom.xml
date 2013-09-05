@@ -71,6 +71,8 @@
                         <phase>verify</phase>
                         <configuration>
                             <target>
+                            <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
+
                                 <property name="compile_classpath" refid="maven.compile.classpath" />
                                 <property name="runtime_classpath" refid="maven.runtime.classpath" />
                                 <property name="test_classpath" refid="maven.test.classpath" />
@@ -86,6 +88,24 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
