@@ -351,12 +351,12 @@
     				<then>
     					<exec dir="${work.dir}" executable="tar" failifexecutionfails="false" failonerror="false">
     						<arg value="cf" />
-    						<arg value="${output.dir}${output.tar.name}" />
+    						<arg value="${output.dir}/${output.tar.name}" />
     						<arg value="eclipse" />
     					</exec>
-    					<gzip destfile="${output.dir}${output.gz.name}" src="${output.dir}${output.tar.name}" />
-    					<delete file="${output.dir}${output.tar.name}" />
-    					<property name="final.name" value="${output.dir}${output.gz.name}"/>
+    					<gzip destfile="${output.dir}/${output.gz.name}" src="${output.dir}/${output.tar.name}" />
+    					<delete file="${output.dir}/${output.tar.name}" />
+    					<property name="final.name" value="${output.dir}/${output.gz.name}"/>
     				</then>
     			</if>
     		</then>
