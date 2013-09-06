@@ -367,7 +367,7 @@ public class ServerUtil
         return retval;
     }
 
-    public static Properties getCategories( IPath portalDir )
+    public static Properties getAllCategories( IPath portalDir )
     {
         Properties retval = null;
 
@@ -407,7 +407,7 @@ public class ServerUtil
 
     public static Properties getPortletCategories( IPath portalDir )
     {
-        Properties props = getCategories( portalDir );
+        Properties props = getAllCategories( portalDir );
         Properties categories = new Properties();
         Enumeration<?> names = props.propertyNames();
 
@@ -449,7 +449,7 @@ public class ServerUtil
 
     public static Properties getEntryCategories( IPath portalDir, String portalVersion )
     {
-        Properties categories = getCategories( portalDir );
+        Properties categories = getAllCategories( portalDir );
 
         Properties retval = new Properties();
 
