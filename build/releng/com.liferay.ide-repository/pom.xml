@@ -71,7 +71,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <target>
-                            <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
 
                                 <property name="compile_classpath" refid="maven.compile.classpath" />
                                 <property name="runtime_classpath" refid="maven.runtime.classpath" />
