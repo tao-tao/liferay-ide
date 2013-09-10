@@ -307,16 +307,16 @@
     	<propertyregex property="temp" input="${output}"
     		regexp=".*feature.group (.*)\..*" replace="\1" />
 
-    	<echo file="mirror" append="true">${temp}</echo>
+    	<echo file="${target.dir}/temp.txt" append="true">${temp}</echo>
 
-    	<loadfile property="version" srcfile="mirror">
+    	<loadfile property="version" srcfile="${target.dir}/temp.txt">
     		<filterchain>
     			<headfilter lines="1"/>
     			<striplinebreaks/>
     		</filterchain>
     	</loadfile>
 
-    	<delete file="mirror"/>
+    	<delete file="${target.dir}/temp.txt"/>
    	</target>
 
 	<target name="clean-output-dir">
