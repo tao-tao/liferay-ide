@@ -18,6 +18,8 @@
 
 package com.liferay.ide.portlet.core.model.internal;
 
+import com.liferay.ide.core.LiferayCore;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -84,13 +86,9 @@ public class PortletNamePossibleValueService extends PossibleValuesService
 
             portletModel.releaseFromRead();
         }
-        catch( IOException e )
+        catch( Exception e )
         {
-            e.printStackTrace();
-        }
-        catch( CoreException e )
-        {
-            e.printStackTrace();
+            LiferayCore.logError( e );
         }
 
         if( this.localPortletNames != null )
