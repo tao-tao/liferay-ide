@@ -15,13 +15,13 @@ import com.liferay.ide.portal.core.structures.model.Structure;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.junit.After;
 import org.junit.Test;
 
 /**
  * @author Gregory Amerson
+ * @author Tao Tao
  */
 public class StructuresTests extends PortalCoreTests
 {
