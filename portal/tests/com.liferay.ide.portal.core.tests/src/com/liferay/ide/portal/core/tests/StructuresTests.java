@@ -984,6 +984,578 @@ public class StructuresTests extends PortalCoreTests
         assertNotNull( dynamicContent );
         assertEquals( "[$FILE=image2.png$]", dynamicContent.getValue().content( false ) );
 
-        final DynamicElement childDynamicElement = dynamicElement
+        final DynamicElement childDynamicElement = dynamicElement.getDynamicElement().content( false );
+
+        assertNotNull( childDynamicElement );
+        assertEquals( "mUJqXMFs", childDynamicElement.getInstanceID().content( false ) );
+        assertEquals( "link", childDynamicElement.getName().content( false ) );
+        assertEquals( "text", childDynamicElement.getType().content( false ) );
+        assertEquals( "", childDynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent childDynamicContent = childDynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( childDynamicContent );
+        assertEquals( "", childDynamicContent.getValue().content( false ) );
+
+        final DynamicElement childChildDynamicElement = childDynamicElement.getDynamicElement().content( false );
+
+        assertNotNull( childChildDynamicElement );
+        assertEquals( "sWvozbm7", childChildDynamicElement.getInstanceID().content( false ) );
+        assertEquals( "url-location", childChildDynamicElement.getName().content( false ) );
+        assertEquals( "text", childChildDynamicElement.getType().content( false ) );
+        assertEquals( "", childChildDynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent childChildDynamicContent = childChildDynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( childChildDynamicContent );
+        assertEquals( "", childChildDynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testHowDoWeDoItRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), How_DO_WE_DO_IT, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 5, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 4 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "Q9mUXJt6", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "content", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals(
+            "<p>"
+                + "\n"
+                + "Nulla turpis erat, sagittis eget mattis sit amet, sagittis at leo. Maecenas condimentum, mi nec iaculis faucibus, ligula libero malesuada massa, quis consequat leo sem et lorem. Sed dignissim, augue bibendum convallis faucibus, sapien ante sollicitudin felis, ac tristique est sapien a enim.<br />"
+                + "\n"
+                + "<br />"
+                + "\n"
+                + "Nunc ut felis nibh. Pellentesque cursus vulputate leo in tincidunt. Nullam lacinia nibh et elit tristique volutpat. Fusce vel arcu vitae velit fermentum blandit.<br />"
+                + "\n"
+                + "<br />"
+                + "\n"
+                + "Sed lobortis venenatis mauris, eu scelerisque lectus rutrum ac. Proin dui magna, dapibus ac ultricies vel, condimentum sed magna. Aenean eleifend molestie nunc a sagittis. Duis leo tellus, consequat nec suscipit tempus, sagittis molestie erat. &nbsp;&nbsp;</p>"
+                + "\n", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testOurAchievementsRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), OUR_ACHIEVEMENTS, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 5, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 4 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "12HH4wl6", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "content", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals(
+            "<p>"
+                + "\n"
+                + "Aliquam consequat, purus vehicula tristique scelerisque, lorem neque rutrum erat, quis aliquet diam magna at ligula. Etiam eget mi tortor, vel pretium lectus. Morbi sit amet dui velit. Cras odio nisl, blandit quis rhoncus eget, convallis nec tortor. In quis tellus lorem. Proin posuere ligula et nisi rhoncus eu mollis ligula varius. Donec pharetra molestie felis non tincidunt. Donec faucibus consectetur cursus. Donec viverra dignissim tempus.<br />"
+                + "\n"
+                + "<br />"
+                + "\n"
+                + "Suspendisse dictum tellus sit amet sapien ullamcorper id facilisis nisi tempor. Integer pulvinar lacus vitae sem scelerisque mollis. Praesent at est eu magna mollis scelerisque sit amet sed lacus.</p>"
+                + "\n", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testOurStrategyRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), OUR_STRATEGY, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 5, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 4 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "99r6u5Hk", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "content", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals(
+            "<p>"
+                + "\n"
+                + "Etiam porta condimentum vulputate. Etiam in eros viverra mauris vehicula commodo vitae vehicula justo. Vestibulum massa diam, iaculis ut posuere dapibus, blandit volutpat nibh.<br />"
+                + "\n"
+                + "<br />"
+                + "\n"
+                + "Neth vehicula, sapien tincidunt aliquet condimentum, nisi ante sodales ligula, ac bibendum risus tortor at lacus. Aliquam sit amet purus felis. Suspendisse velit justo, suscipit eget convallis eget, viverra at ligula. Aliquam ut mollis orci. Mauris condimentum viverra dui a dictum. Donec adipiscing arcu non sapien hendrerit pellentesque.<br />"
+                + "\n"
+                + "<br />"
+                + "\n"
+                + "Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse laoreet pharetra lorem sit amet volutpat. Quisque felis nulla, rhoncus at blandit vitae, tempus a ante.</p>"
+                + "\n", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testWhoWeAreRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), WHO_WE_ARE, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 6, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 5 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "EVZd09wH", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "content", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals(
+            "<p>"
+                + "\n"
+                + "Aliquam consequat, purus vehicula tristique scelerisque, lorem neque rutrum erat, quis aliquet diam magna at ligula. Etiam eget mi tortor, vel pretium lectus. Morbi sit amet dui velit. Cras odio nisl, blandit quis rhoncus eget, convallis nec tortor. In quis tellus lorem. Proin posuere ligula et nisi rhoncus eu mollis ligula varius. Donec pharetra molestie felis non tincidunt. Donec faucibus consectetur cursus. Donec viverra dignissim tempus.<br />"
+                + "\n"
+                + "<br />"
+                + "\n"
+                + "Suspendisse dictum tellus sit amet sapien ullamcorper id facilisis nisi tempor. Integer pulvinar lacus vitae sem scelerisque mollis. Praesent at est eu magna mollis. Nulla turpis erat, sagittis eget mattis sit amet, sagittis at leo. Maecenas condimentum, mi nec iaculis faucibus, ligula libero malesuada massa. Proin posuere ligula et nisi rhoncus eu mollis ligula varius. Donec pharetra molestie felis non tincidunt. Donec faucibus consectetur cursus. Donec viverra dignissim tempus. Maecenas condimentum, mi nec iaculis faucibus, ligula libero malesuada massa. Proin posuere ligula et nisi rhoncus eu mollis ligula varius.</p>"
+                + "\n", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testInnovatingForOver30YearsRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), INNOVATION_FOR_OVER_30_YEARS, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getDefaultLocale().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 4, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 1 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "c7kCbmEK", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "col-one", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals(
+            "<p>Proin quis dui sem, quis suscipit diam. Vestibulum laoreet mollis justo. Etiam quis dapibus justo. Praesent posuere tellus ac dui consequat accumsan. Pellentesque rutrum ultrices nisi non luctus. In leo velit, ornare a consectetur ut, semper gravida elit. Nulla facilisis ante libero.<br /><br />Suspendisse tellus risus, auctor vitae suscipit et, fermentum a est. Donec magna nulla, malesuada ut semper viverra, bibendum in mi. Nullam semper, nisi in elementum tempus, massa urna suscipit turpis, ac bibendum lectus nisl ac enim. Duis rhoncus dictum ipsum, eu dignissim neque vestibulum a. Nam vel tortor urna. Aliquam erat volutpat. Donec diam massa, aliquet quis lacinia nec, aliquam ut mi. Etiam non condimentum mi. Donec faucibus purus vel leo fermentum fringilla. Donec interdum, libero sed consectetur luctus, enim nunc dictum lorem, sed ullamcorper nibh nisi eu magna.<br /><br />Praesent posuere tellus ac dui consequat accumsan. Pellentesque rutrum ultrices nisi non luctus. In leo velit, ornare a consectetur ut, semper gravida elit. Nulla facilisis ante libero. Suspendisse tellus risus, auctor vitae suscipit et, fermentum a est. Donec magna nulla, malesuada ut semper viverra, bibendum in mi. Nullam semper, nisi in elementum tempus, massa urna suscipit turpis, ac bibendum lectus nisl ac enim. Duis rhoncus dictum ipsum, eu dignissim neque vestibulum a. Nam vel tortor urna. Aliquam erat volutpat. Donec diam massa, aliquet quis lacinia nec, aliquam ut mi. Etiam non condimentum mi. Donec faucibus purus vel leo fermentum fringilla. Donec interdum, libero sed consectetur luctus, enim nunc dictum lorem, sed ullamcorper nibh nisi eu magna.</p>"
+                + "\n", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testDownloadPodRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), DOWNLOAD_POD, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 5, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 3 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "htn4tqLU", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "description", dynamicElement.getName().content( false ) );
+        assertEquals( "text_box", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals(
+            "Released Date: December 2010<br/> Issue: #46<br/> Type: PDF<br/>",
+            dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testCarouselRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), CAROUSEL, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 5, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 2 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "duration", dynamicElement.getName().content( false ) );
+        assertEquals( "list", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", dynamicElement.getRepeatable().content( false ) );
+
+        final DynamicElementMetadata metadata = dynamicElement.getMetadata().content( false );
+
+        assertNotNull( metadata );
+
+        final ElementList<Entry> entries = metadata.getEntries();
+
+        assertNotNull( entries );
+        assertEquals( 5, entries.size() );
+
+        final Entry entry = entries.get( 0 );
+
+        assertNotNull( entry );
+        assertEquals( "displayAsTooltip", entry.getName().content( false ) );
+        assertEquals( "true", entry.getValue().content( false ) );
+
+        final ElementList<DynamicElement> childDynamicElements = dynamicElement.getDynamicElements();
+
+        assertNotNull( childDynamicElements );
+        assertEquals( 10, childDynamicElements.size() );
+
+        final DynamicElement childDynamicElement = childDynamicElements.get( 0 );
+
+        assertNotNull( childDynamicElement );
+        assertEquals( "1", childDynamicElement.getName().content( false ) );
+        assertEquals( "1", childDynamicElement.getType().content( false ) );
+        assertEquals( "", childDynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", childDynamicElement.getRepeatable().content( false ) );
+    }
+
+    @Test
+    public void testFeaturedContentRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), FEATURED_CONTENT, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 5, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 1 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "link", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", dynamicElement.getRepeatable().content( false ) );
+
+        final DynamicElementMetadata dynamicElementMetadata = dynamicElement.getMetadata().content( false );
+
+        assertNotNull( dynamicElementMetadata );
+
+        final ElementList<Entry> entries = dynamicElementMetadata.getEntries();
+
+        assertNotNull( entries );
+        assertEquals( 5, entries.size() );
+
+        final Entry entry = entries.get( 0 );
+
+        assertNotNull( entry );
+        assertEquals( "displayAsTooltip", entry.getName().content( false ) );
+        assertEquals( "true", entry.getValue().content( false ) );
+    }
+
+    @Test
+    public void testMainContentRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), MAIN_CONTENT, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 4, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 2 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "col-two", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", dynamicElement.getRepeatable().content( false ) );
+
+        final DynamicElementMetadata metadata = dynamicElement.getMetadata().content( false );
+
+        assertNotNull( metadata );
+
+        final ElementList<Entry> entries = metadata.getEntries();
+
+        assertNotNull( entries );
+        assertEquals( 5, entries.size() );
+
+        final Entry entry = entries.get( 3 );
+
+        assertNotNull( entry );
+        assertEquals( "label", entry.getName().content( false ) );
+        assertEquals( "Column 2", entry.getValue().content( false ) );
+    }
+
+    @Test
+    public void testPodRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), POD, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 4, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 3 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "col-three", dynamicElement.getName().content( false ) );
+        assertEquals( "text_area", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", dynamicElement.getRepeatable().content( false ) );
+
+        final DynamicElementMetadata metadata = dynamicElement.getMetadata().content( false );
+
+        assertNotNull( metadata );
+
+        final ElementList<Entry> entries = metadata.getEntries();
+
+        assertNotNull( entries );
+        assertEquals( 5, entries.size() );
+
+        final Entry entry = entries.get( 3 );
+
+        assertNotNull( entry );
+        assertEquals( "label", entry.getName().content( false ) );
+        assertEquals( "Column 3", entry.getValue().content( false ) );
+    }
+
+    @Test
+    public void testHeaderSocialArticlesRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), HEADER_SOCIAL_ARTICLES, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+
+        final ElementList<DynamicElement> dynamicElements = root.getDynamicElements();
+
+        assertNotNull( dynamicElements );
+        assertEquals( 3, dynamicElements.size() );
+
+        final DynamicElement dynamicElement = dynamicElements.get( 0 );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "24gLsQq7", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "social-links", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "Facebook", dynamicContent.getValue().content( false ) );
+
+        final DynamicElement childDynamicElement = dynamicElement.getDynamicElement().content( false );
+
+        assertNotNull( childDynamicElement );
+        assertEquals( "PiUn7wUE", childDynamicElement.getInstanceID().content( false ) );
+        assertEquals( "url-location", dynamicElement.getName().content( false ) );
+        assertEquals( "text", childDynamicElement.getType().content( false ) );
+        assertEquals( "", childDynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent childDynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( childDynamicContent );
+        assertEquals( "//www.facebook.com/liferay", childDynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testTwitterBlockRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), TWITTER_BLOCK, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+        assertEquals( "en_US", root.getAvailableLocales().content( false ) );
+
+        final DynamicElement dynamicElement = root.getDynamicElement().content( false );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "a0KUbOFU", dynamicElement.getInstanceID().content( false ) );
+        assertEquals( "username", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+
+        final DynamicContent dynamicContent = dynamicElement.getDynamicContent().content( false );
+
+        assertNotNull( dynamicContent );
+        assertEquals( "liferay", dynamicContent.getValue().content( false ) );
+    }
+
+    @Test
+    public void testHeaderSocialStructuresRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), HEADER_SOCIAL_STRUCTURES, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+
+        final DynamicElement dynamicElement = root.getDynamicElement().content( false );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "url-location", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", dynamicElement.getRepeatable().content( false ) );
+
+        final DynamicElementMetadata metadata = dynamicElement.getMetadata().content( false );
+
+        assertNotNull( metadata );
+
+        final ElementList<Entry> entries = metadata.getEntries();
+
+        assertNotNull( entries );
+        assertEquals( 5, entries.size() );
+
+        final Entry entry = entries.get( 4 );
+
+        assertEquals( "instructions", entry.getName().content( false ) );
+        assertEquals( "social name, no spaces (facebook, twitter, linkedin)", entry.getValue().content( false ) );
+    }
+
+    @Test
+    public void testTwitterRead() throws Exception
+    {
+        final Element element = getElementFromFile( getCurrentProject(), TWITTER, Root.TYPE );
+
+        setElement( element );
+
+        final Root root = element.nearest( Root.class );
+
+        assertNotNull( root );
+
+        final DynamicElement dynamicElement = root.getDynamicElement().content( false );
+
+        assertNotNull( dynamicElement );
+        assertEquals( "username", dynamicElement.getName().content( false ) );
+        assertEquals( "text", dynamicElement.getType().content( false ) );
+        assertEquals( "", dynamicElement.getIndexType().content( false ) );
+        assertEquals( "false", dynamicElement.getRepeatable().content( false ) );
+
+        final DynamicElementMetadata metadata = dynamicElement.getMetadata().content( false );
+
+        final ElementList<Entry> entries = metadata.getEntries();
+
+        assertNotNull( entries );
+        assertEquals( 5, entries.size() );
+
+        final Entry entry = entries.get( 5 );
+
+        assertNotNull( entry );
+        assertEquals( "label", entry.getName().content( false ) );
+        assertEquals( "Twitter Username", entry.getValue().content( false ) );
     }
 }
