@@ -34,7 +34,7 @@ public interface HasDynamicElements extends Element
 
     ElementType TYPE = new ElementType( HasDynamicElements.class );
 
-    // *** DynamicElements ***
+    // *** DynamicElement ***
 
     @Type( base = DynamicElement.class )
     @Label( standard = "dynamic elements" )

@@ -112,9 +112,7 @@ public interface DynamicElement extends HasDynamicElements
     @XmlBinding( path = "@multiple" )
     ValueProperty PROP_MULTIPLE = new ValueProperty( TYPE, "Multiple" ); //$NON-NLS-1$
 
-    Value<Boolean> isMultiple();
-
-    Value<String> getMultiple();
+    Value<Boolean> getMultiple();
 
     void setMultiple( String value );
 
@@ -139,7 +137,7 @@ public interface DynamicElement extends HasDynamicElements
     // *** IndexType ***
 
     @Label( standard = "index type" )
-    @XmlBinding( path = "@indexType" )
+    @XmlBinding( path = "@index-type" )
     ValueProperty PROP_INDEX_TYPE = new ValueProperty( TYPE, "IndexType" ); //$NON-NLS-1$
 
     Value<String> getIndexType();
@@ -216,9 +214,9 @@ public interface DynamicElement extends HasDynamicElements
 
     void setInstanceID( String value );
 
-    // *** DynamicContents ***
+    // *** DynamicContent ***
     @Type( base = DynamicContent.class )
-    @Label( standard = "dynamic contents" )
+    @Label( standard = "dynamic content" )
     @XmlListBinding
     ( 
         mappings = 
@@ -230,7 +228,7 @@ public interface DynamicElement extends HasDynamicElements
             ) 
          } 
      )
-    ListProperty PROP_DYNAMIC_CONTENT = new ListProperty( TYPE, "DynamicContents" ); //$NON-NLS-1$
+    ListProperty PROP_DYNAMIC_CONTENT = new ListProperty( TYPE, "DynamicContent" ); //$NON-NLS-1$
 
     ElementHandle<DynamicContent> getDynamicContent();
 
