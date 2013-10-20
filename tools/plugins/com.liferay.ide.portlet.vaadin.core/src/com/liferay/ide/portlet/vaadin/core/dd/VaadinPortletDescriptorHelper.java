@@ -17,6 +17,7 @@ package com.liferay.ide.portlet.vaadin.core.dd;
 
 import com.liferay.ide.core.ILiferayConstants;
 import com.liferay.ide.core.util.CoreUtil;
+import com.liferay.ide.core.util.NodeUtil;
 import com.liferay.ide.core.util.StringPool;
 import com.liferay.ide.portlet.core.IPluginPackageModel;
 import com.liferay.ide.portlet.core.PluginPropertiesConfiguration;
@@ -37,6 +38,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Helper for editing various portlet configuration XML files, to add Vaadin portlet configuration to them. Also
@@ -44,6 +49,7 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
  * 
  * @author Henri Sara
  */
+@SuppressWarnings( "restriction" )
 public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
     implements INewVaadinPortletClassDataModelProperties
 {
@@ -54,15 +60,63 @@ public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
     }
 
     @Override
-    public IStatus addNewPortlet( IDataModel model )
+    public IStatus addNewPortlet( final IDataModel model )
     {
         IStatus status = super.addNewPortlet( model );
+
         if( !status.isOK() )
         {
             return status;
         }
 
+        final IFile descriptorFile = getDescriptorFile( ILiferayConstants.LIFERAY_PORTLET_XML_FILE );
+
+        if( descriptorFile != null )
+        {
+            DOMModelOperation op = new DOMModelEditOperation( descriptorFile )
+            {
+
+                @Override
+                protected IStatus doExecute( IDOMDocument document )
+                {
+                    return updateVaadinLiferayPortletXML( document, model );
+                }
+
+                @Override
+                protected void createDefaultFile()
+                {
+                    //Getting document from super( descriptorFile );
+                }
+            };
+
+            IStatus opStatus = op.execute();
+
+            if( !opStatus.isOK() )
+            {
+                return opStatus;
+            }
+        }
+
         return addPortalDependency( IPluginPackageModel.PROPERTY_PORTAL_DEPENDENCY_JARS, "vaadin.jar" ); //$NON-NLS-1$
+    }
+
+    private IStatus updateVaadinLiferayPortletXML( IDOMDocument document, IDataModel model )
+    {
+        Element rootElement = document.getDocumentElement();
+
+        NodeList portletNodes = rootElement.getElementsByTagName( "portlet" );
+
+        Element lastPortletElement = (Element) portletNodes.item( portletNodes.getLength() - 1 );
+
+        Node rnpNode = NodeUtil.appendChildElement( lastPortletElement, "requires-namespaced-parameters", "false" );
+        Node ajaxNode = NodeUtil.appendChildElement( lastPortletElement, "ajaxable", "false" );
+        Node hpcNode = lastPortletElement.getElementsByTagName( "header-portlet-css" ).item( 0 );
+        Node fpjNode = lastPortletElement.getElementsByTagName( "footer-portlet-javascript" ).item( 0 );
+
+        lastPortletElement.replaceChild( rnpNode, hpcNode );
+        lastPortletElement.replaceChild( ajaxNode, fpjNode );
+
+        return Status.OK_STATUS;
     }
 
     public IStatus addPortalDependency( String propertyName, String value )
