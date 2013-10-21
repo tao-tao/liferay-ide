@@ -16,6 +16,8 @@
 package com.liferay.ide.portlet.vaadin.core.dd;
 
 import com.liferay.ide.core.ILiferayConstants;
+import com.liferay.ide.core.ILiferayProject;
+import com.liferay.ide.core.LiferayCore;
 import com.liferay.ide.core.util.CoreUtil;
 import com.liferay.ide.core.util.NodeUtil;
 import com.liferay.ide.core.util.StringPool;
@@ -24,6 +26,9 @@ import com.liferay.ide.portlet.core.PluginPropertiesConfiguration;
 import com.liferay.ide.portlet.core.dd.PortletDescriptorHelper;
 import com.liferay.ide.portlet.vaadin.core.VaadinCore;
 import com.liferay.ide.portlet.vaadin.core.operation.INewVaadinPortletClassDataModelProperties;
+import com.liferay.ide.project.core.facet.IPluginProjectDataModelProperties;
+import com.liferay.ide.sdk.core.SDK;
+import com.liferay.ide.sdk.core.SDKManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,6 +44,7 @@ import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.osgi.framework.Version;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -48,6 +54,7 @@ import org.w3c.dom.NodeList;
  * supports adding a dependency to Vaadin in liferay-plugin-package.properties (if necessary).
  * 
  * @author Henri Sara
+ * @author Tao Tao
  */
 @SuppressWarnings( "restriction" )
 public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
@@ -71,29 +78,40 @@ public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
 
         final IFile descriptorFile = getDescriptorFile( ILiferayConstants.LIFERAY_PORTLET_XML_FILE );
 
-        if( descriptorFile != null )
+        ILiferayProject liferayProject = LiferayCore.create( this.project );
+
+        Version v62 = new Version( "6.2" );
+
+        if( descriptorFile != null && liferayProject != null )
         {
-            DOMModelOperation op = new DOMModelEditOperation( descriptorFile )
+            String version = liferayProject.getPortalVersion();
+            Version runtimeVersion = new Version( version );
+
+            // Runtime version should be equal or greater than 6.2.
+            if( CoreUtil.compareVersions( runtimeVersion, v62 ) >= 0 )
             {
-
-                @Override
-                protected IStatus doExecute( IDOMDocument document )
+                DOMModelOperation op = new DOMModelEditOperation( descriptorFile )
                 {
-                    return updateVaadinLiferayPortletXML( document, model );
-                }
 
-                @Override
-                protected void createDefaultFile()
+                    @Override
+                    protected IStatus doExecute( IDOMDocument document )
+                    {
+                        return updateVaadinLiferayPortletXML( document, model );
+                    }
+
+                    @Override
+                    protected void createDefaultFile()
+                    {
+                        // Getting document from super( descriptorFile );
+                    }
+                };
+
+                IStatus opStatus = op.execute();
+
+                if( !opStatus.isOK() )
                 {
-                    //Getting document from super( descriptorFile );
+                    return opStatus;
                 }
-            };
-
-            IStatus opStatus = op.execute();
-
-            if( !opStatus.isOK() )
-            {
-                return opStatus;
             }
         }
 
