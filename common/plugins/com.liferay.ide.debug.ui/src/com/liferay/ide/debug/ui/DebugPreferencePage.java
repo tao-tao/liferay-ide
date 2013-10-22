@@ -37,10 +37,61 @@ import org.osgi.service.prefs.BackingStoreException;
 public class DebugPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
     private ScopedPreferenceStore prefStore;
+    private MyStringFieldEditor passwordEditor;
+    private MyIntegerFieldEditor portEditor;
 
     public DebugPreferencePage()
     {
         super( GRID );
+    }
+
+    private class MyStringFieldEditor extends StringFieldEditor
+    {
+
+        public MyStringFieldEditor( String name, String string, Composite composite )
+        {
+            super( name, string, composite );
+        }
+
+        @Override
+        protected void valueChanged()
+        {
+            super.valueChanged();
+
+            if( this.isValid() )
+            {
+                reValidate();
+            }
+        }
+
+        @Override
+        public void refreshValidState()
+        {
+            super.refreshValidState();
+        }
+    }
+
+    private class MyIntegerFieldEditor extends IntegerFieldEditor
+    {
+
+        public MyIntegerFieldEditor( String name, String labelText, Composite parent )
+        {
+            super( name, labelText, parent );
+        }
+
+        @Override
+        protected void valueChanged()
+        {
+            super.valueChanged();
+
+            reValidate();
+        }
+
+        @Override
+        public void refreshValidState()
+        {
+            super.refreshValidState();
+        }
     }
 
     @Override
@@ -51,22 +102,34 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
         group.setLayoutData( gd );
         Composite composite = SWTUtil.createComposite( group, 2, 2, GridData.FILL_HORIZONTAL );
 
-        StringFieldEditor passwordEditor =
-            new StringFieldEditor( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD, "Password:", composite ); //$NON-NLS-1$
+        passwordEditor = new MyStringFieldEditor( LiferayDebugCore.PREF_FM_DEBUG_PASSWORD, "Password:", composite );
+
         passwordEditor.setEmptyStringAllowed( false );
         passwordEditor.setErrorMessage( "Password is invalid." );
+        passwordEditor.setValidateStrategy( StringFieldEditor.VALIDATE_ON_KEY_STROKE );
         passwordEditor.setPreferenceStore( getPreferenceStore() );
         addField( passwordEditor );
 
-        IntegerFieldEditor portEditor =
-            new IntegerFieldEditor( LiferayDebugCore.PREF_FM_DEBUG_PORT, "Port:", composite ); //$NON-NLS-1$
+        portEditor = new MyIntegerFieldEditor( LiferayDebugCore.PREF_FM_DEBUG_PORT, "Port:", composite ); //$NON-NLS-1$
 
         portEditor.setValidRange( 1025, 65535 );
         portEditor.setEmptyStringAllowed( false );
-        portEditor.setPreferenceStore( getPreferenceStore() );
         portEditor.setErrorMessage( "Port value ranges from integer 1025 to 65535." ); //$NON-NLS-1$
         portEditor.setValidateStrategy( StringFieldEditor.VALIDATE_ON_KEY_STROKE );
+        portEditor.setPreferenceStore( getPreferenceStore() );
         addField( portEditor );
+    }
+
+    public void reValidate()
+    {
+        passwordEditor.refreshValidState();
+
+        if( !passwordEditor.isValid() )
+        {
+            return;
+        }
+
+        portEditor.refreshValidState();
     }
 
     @Override
