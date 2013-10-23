@@ -76,41 +76,42 @@ public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
             return status;
         }
 
-        final IFile descriptorFile = getDescriptorFile( ILiferayConstants.LIFERAY_PORTLET_XML_FILE );
-
         ILiferayProject liferayProject = LiferayCore.create( this.project );
 
-        Version v62 = new Version( "6.2" );
-
-        if( descriptorFile != null && liferayProject != null )
+        if( liferayProject != null )
         {
             String version = liferayProject.getPortalVersion();
             Version runtimeVersion = new Version( version );
 
             // Runtime version should be equal or greater than 6.2.
-            if( CoreUtil.compareVersions( runtimeVersion, v62 ) >= 0 )
+            if( CoreUtil.compareVersions( runtimeVersion, ILiferayConstants.VAADIN_LEAST_SUPPORTED_VERSION ) >= 0 )
             {
-                DOMModelOperation op = new DOMModelEditOperation( descriptorFile )
+                final IFile descriptorFile = getDescriptorFile( ILiferayConstants.LIFERAY_PORTLET_XML_FILE );
+
+                if( descriptorFile != null )
                 {
-
-                    @Override
-                    protected IStatus doExecute( IDOMDocument document )
+                    DOMModelOperation op = new DOMModelEditOperation( descriptorFile )
                     {
-                        return updateVaadinLiferayPortletXML( document, model );
-                    }
 
-                    @Override
-                    protected void createDefaultFile()
+                        @Override
+                        protected void createDefaultFile()
+                        {
+                            // Getting document from super( descriptorFile );
+                        }
+
+                        @Override
+                        protected IStatus doExecute( IDOMDocument document )
+                        {
+                            return updateVaadinLiferayPortletXML( document );
+                        }
+                    };
+
+                    IStatus opStatus = op.execute();
+
+                    if( !opStatus.isOK() )
                     {
-                        // Getting document from super( descriptorFile );
+                        return opStatus;
                     }
-                };
-
-                IStatus opStatus = op.execute();
-
-                if( !opStatus.isOK() )
-                {
-                    return opStatus;
                 }
             }
         }
@@ -118,21 +119,24 @@ public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
         return addPortalDependency( IPluginPackageModel.PROPERTY_PORTAL_DEPENDENCY_JARS, "vaadin.jar" ); //$NON-NLS-1$
     }
 
-    private IStatus updateVaadinLiferayPortletXML( IDOMDocument document, IDataModel model )
+    private IStatus updateVaadinLiferayPortletXML( IDOMDocument document )
     {
         Element rootElement = document.getDocumentElement();
 
         NodeList portletNodes = rootElement.getElementsByTagName( "portlet" );
 
-        Element lastPortletElement = (Element) portletNodes.item( portletNodes.getLength() - 1 );
+        if( portletNodes.getLength() > 1 )
+        {
+            Element lastPortletElement = (Element) portletNodes.item( portletNodes.getLength() - 1 );
 
-        Node rnpNode = NodeUtil.appendChildElement( lastPortletElement, "requires-namespaced-parameters", "false" );
-        Node ajaxNode = NodeUtil.appendChildElement( lastPortletElement, "ajaxable", "false" );
-        Node hpcNode = lastPortletElement.getElementsByTagName( "header-portlet-css" ).item( 0 );
-        Node fpjNode = lastPortletElement.getElementsByTagName( "footer-portlet-javascript" ).item( 0 );
+            Node rnpNode = NodeUtil.appendChildElement( lastPortletElement, "requires-namespaced-parameters", "false" );
+            Node ajaxNode = NodeUtil.appendChildElement( lastPortletElement, "ajaxable", "false" );
+            Node hpcNode = lastPortletElement.getElementsByTagName( "header-portlet-css" ).item( 0 );
+            Node fpjNode = lastPortletElement.getElementsByTagName( "footer-portlet-javascript" ).item( 0 );
 
-        lastPortletElement.replaceChild( rnpNode, hpcNode );
-        lastPortletElement.replaceChild( ajaxNode, fpjNode );
+            lastPortletElement.replaceChild( rnpNode, hpcNode );
+            lastPortletElement.replaceChild( ajaxNode, fpjNode );
+        }
 
         return Status.OK_STATUS;
     }

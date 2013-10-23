@@ -111,7 +111,7 @@ public class DescriptorHelper
         }
     }
 
-    public static abstract class DOMModelOperation
+    protected static abstract class DOMModelOperation
     {
         protected IFile file;
 
