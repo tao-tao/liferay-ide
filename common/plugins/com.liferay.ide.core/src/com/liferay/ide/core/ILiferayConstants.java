@@ -26,7 +26,6 @@ import org.osgi.framework.Version;
 public interface ILiferayConstants
 {
     Version LEAST_SUPPORTED_VERSION = new Version( 6, 0, 2 );
-    Version VAADIN_LEAST_SUPPORTED_VERSION = new Version( 6, 2, 0 );
     String LIFERAY_DISPLAY_XML_FILE = "liferay-display.xml"; //$NON-NLS-1$
     String LIFERAY_HOOK_XML_FILE = "liferay-hook.xml"; //$NON-NLS-1$
     String LIFERAY_LAYOUTTPL_XML_FILE = "liferay-layout-templates.xml"; //$NON-NLS-1$

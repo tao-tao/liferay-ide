@@ -84,7 +84,7 @@ public class VaadinPortletDescriptorHelper extends PortletDescriptorHelper
             Version runtimeVersion = new Version( version );
 
             // Runtime version should be equal or greater than 6.2.
-            if( CoreUtil.compareVersions( runtimeVersion, ILiferayConstants.VAADIN_LEAST_SUPPORTED_VERSION ) >= 0 )
+            if( CoreUtil.compareVersions( runtimeVersion, ILiferayConstants.V620 ) >= 0 )
             {
                 final IFile descriptorFile = getDescriptorFile( ILiferayConstants.LIFERAY_PORTLET_XML_FILE );
 
