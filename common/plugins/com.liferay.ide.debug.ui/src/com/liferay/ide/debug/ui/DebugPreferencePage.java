@@ -84,7 +84,10 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
         {
             super.valueChanged();
 
-            reValidate();
+            if( this.isValid() )
+            {
+                reValidate();
+            }
         }
 
         @Override
