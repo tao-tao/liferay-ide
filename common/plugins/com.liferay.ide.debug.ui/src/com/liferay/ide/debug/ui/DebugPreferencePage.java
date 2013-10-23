@@ -33,16 +33,34 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Cindy Li
+ * @author Tao Tao
  */
 public class DebugPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-    private ScopedPreferenceStore prefStore;
-    private MyStringFieldEditor passwordEditor;
-    private MyIntegerFieldEditor portEditor;
-
-    public DebugPreferencePage()
+    private class MyIntegerFieldEditor extends IntegerFieldEditor
     {
-        super( GRID );
+
+        public MyIntegerFieldEditor( String name, String labelText, Composite parent )
+        {
+            super( name, labelText, parent );
+        }
+
+        @Override
+        public void refreshValidState()
+        {
+            super.refreshValidState();
+        }
+
+        @Override
+        protected void valueChanged()
+        {
+            super.valueChanged();
+
+            if( this.isValid() )
+            {
+                reValidate();
+            }
+        }
     }
 
     private class MyStringFieldEditor extends StringFieldEditor
@@ -54,6 +72,12 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
         }
 
         @Override
+        public void refreshValidState()
+        {
+            super.refreshValidState();
+        }
+
+        @Override
         protected void valueChanged()
         {
             super.valueChanged();
@@ -62,39 +86,18 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
             {
                 reValidate();
             }
-        }
-
-        @Override
-        public void refreshValidState()
-        {
-            super.refreshValidState();
         }
     }
 
-    private class MyIntegerFieldEditor extends IntegerFieldEditor
+    private ScopedPreferenceStore prefStore;
+
+    private MyStringFieldEditor passwordEditor;
+
+    private MyIntegerFieldEditor portEditor;
+
+    public DebugPreferencePage()
     {
-
-        public MyIntegerFieldEditor( String name, String labelText, Composite parent )
-        {
-            super( name, labelText, parent );
-        }
-
-        @Override
-        protected void valueChanged()
-        {
-            super.valueChanged();
-
-            if( this.isValid() )
-            {
-                reValidate();
-            }
-        }
-
-        @Override
-        public void refreshValidState()
-        {
-            super.refreshValidState();
-        }
+        super( GRID );
     }
 
     @Override
@@ -121,18 +124,6 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
         portEditor.setValidateStrategy( StringFieldEditor.VALIDATE_ON_KEY_STROKE );
         portEditor.setPreferenceStore( getPreferenceStore() );
         addField( portEditor );
-    }
-
-    public void reValidate()
-    {
-        passwordEditor.refreshValidState();
-
-        if( !passwordEditor.isValid() )
-        {
-            return;
-        }
-
-        portEditor.refreshValidState();
     }
 
     @Override
@@ -167,5 +158,17 @@ public class DebugPreferencePage extends FieldEditorPreferencePage implements IW
         }
 
         super.performDefaults();
+    }
+
+    public void reValidate()
+    {
+        passwordEditor.refreshValidState();
+
+        if( !passwordEditor.isValid() )
+        {
+            return;
+        }
+
+        portEditor.refreshValidState();
     }
 }
