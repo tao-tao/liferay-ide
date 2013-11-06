@@ -64,9 +64,9 @@ public class UseSdkLocationAction extends SapphireActionHandler
                     {
                         Version version = new Version( sdk.getVersion() );
 
-                        if( CoreUtil.compareVersions( version, ILiferayConstants.V611 ) > 0 &&
-                            CoreUtil.compareVersions( version, ILiferayConstants.V6110 ) < 0 ||
-                            CoreUtil.compareVersions( version, ILiferayConstants.V6120 ) >= 0 )
+                        if( ( CoreUtil.compareVersions( version, ILiferayConstants.V611 ) > 0 && CoreUtil.compareVersions(
+                            version, ILiferayConstants.V6110 ) < 0 ) ||
+                            ( CoreUtil.compareVersions( version, ILiferayConstants.V6120 ) >= 0 ) )
                         {
                             action.setEnabled( true );
                         }
