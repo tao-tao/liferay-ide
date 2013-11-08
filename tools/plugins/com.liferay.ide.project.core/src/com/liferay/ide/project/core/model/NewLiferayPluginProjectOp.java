@@ -33,8 +33,6 @@ import com.liferay.ide.project.core.model.internal.ProjectNameValidationService;
 import com.liferay.ide.project.core.model.internal.ProjectProviderDefaultValueService;
 import com.liferay.ide.project.core.model.internal.ProjectProviderListener;
 import com.liferay.ide.project.core.model.internal.ProjectProviderPossibleValuesService;
-import com.liferay.ide.project.core.model.internal.RuntimeNameDefaultValueService;
-import com.liferay.ide.project.core.model.internal.RuntimeNamePossibleValuesService;
 import com.liferay.ide.project.core.model.internal.RuntimeNameValidationService;
 import com.liferay.ide.project.core.model.internal.UseDefaultLocationEnablementService;
 import com.liferay.ide.project.core.model.internal.UseDefaultLocationListener;
@@ -66,7 +64,7 @@ import org.eclipse.sapphire.modeling.annotations.Whitespace;
  * @author Gregory Amerson
  * @author Simon Jiang
  */
-public interface NewLiferayPluginProjectOp extends ExecutableElement
+public interface NewLiferayPluginProjectOp extends ExecutableElement, HasLiferayRuntime
 {
 
     ElementType TYPE = new ElementType( NewLiferayPluginProjectOp.class );
@@ -183,21 +181,9 @@ public interface NewLiferayPluginProjectOp extends ExecutableElement
 
     // *** RuntimeName ***
 
-    @Label( standard = "runtime" )
-    @Services
-    (
-        value =
-        {
-            @Service( impl = RuntimeNamePossibleValuesService.class ),
-            @Service( impl = RuntimeNameDefaultValueService.class ),
-            @Service( impl = RuntimeNameValidationService.class )
-        }
-    )
-    ValueProperty PROP_RUNTIME_NAME = new ValueProperty( TYPE, "RuntimeName" ); //$NON-NLS-1$
+    @Service( impl = RuntimeNameValidationService.class )
+    ValueProperty PROP_RUNTIME_NAME = new ValueProperty( TYPE, HasLiferayRuntime.PROP_RUNTIME_NAME ); //$NON-NLS-1$
 
-    Value<String> getRuntimeName();
-
-    void setRuntimeName( String value );
 
     // *** Version ***
 
@@ -292,14 +278,14 @@ public interface NewLiferayPluginProjectOp extends ExecutableElement
     void setGroupId( String value );
 
 
-    // *** Profiles ***
+    // *** ActiveProfiles ***
 
     @Label( standard = "profiles" )
-    ValueProperty PROP_PROFILES = new ValueProperty( TYPE, "Profiles" );
+    ValueProperty PROP_ACTIVE_PROFILES = new ValueProperty( TYPE, "ActiveProfiles" );
 
-    Value<String> getProfiles();
+    Value<String> getActiveProfiles();
 
-    void setProfiles( String value );
+    void setActiveProfiles( String value );
 
 
     // *** FinalProjectName ***

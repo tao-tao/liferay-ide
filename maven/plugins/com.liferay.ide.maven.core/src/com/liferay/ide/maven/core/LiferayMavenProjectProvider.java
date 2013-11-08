@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.archetype.catalog.Archetype;
+import org.apache.maven.settings.Profile;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
@@ -64,6 +65,13 @@ public class LiferayMavenProjectProvider extends AbstractLiferayProjectProvider
 
     public IStatus createNewProject( Object operation, IProgressMonitor monitor ) throws CoreException
     {
+        List<Profile> globalprofiles = MavenPlugin.getMaven().getSettings().getProfiles();
+
+        for( Profile p : globalprofiles )
+        {
+            System.out.println(p.getId());
+        }
+
         if( ! (operation instanceof NewLiferayPluginProjectOp ) )
         {
             throw new IllegalArgumentException( "Operation must be of type NewLiferayPluginProjectOp" ); //$NON-NLS-1$
@@ -77,7 +85,7 @@ public class LiferayMavenProjectProvider extends AbstractLiferayProjectProvider
         final String artifactId = op.getProjectName().content();
         final String version = op.getVersion().content();
         final String javaPackage = op.getGroupId().content();
-        final String profiles = op.getProfiles().content();
+        final String profiles = op.getActiveProfiles().content();
 
         IPath location = PathBridge.create( op.getLocation().content() );
         // for location we should use the parent location
@@ -154,6 +162,12 @@ public class LiferayMavenProjectProvider extends AbstractLiferayProjectProvider
             retval = Status.OK_STATUS;
         }
 
+
+
+
+
+
+
         return retval;
     }
 
@@ -183,7 +197,7 @@ public class LiferayMavenProjectProvider extends AbstractLiferayProjectProvider
     }
 
     @Override
-    public String[] getPossibleVersions()
+    public String[] getPossibleVersions( Object... paramters )
     {
         String[] retval = new String[0];
 
@@ -193,7 +207,14 @@ public class LiferayMavenProjectProvider extends AbstractLiferayProjectProvider
 
         RepositorySystemSession session = AetherUtil.newRepositorySystemSession( system );
 
-        Artifact artifact = new DefaultArtifact( "com.liferay.portal:portal-service:[6,)" );
+        String coords = "com.liferay.portal:portal-service:[6,)";
+
+        if( paramters.length > 0 )
+        {
+            coords = paramters[0].toString();
+        }
+
+        Artifact artifact = new DefaultArtifact( coords );
 
         RemoteRepository repo = AetherUtil.newCentralRepository();
 

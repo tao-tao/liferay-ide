@@ -47,7 +47,7 @@ public abstract class AbstractLiferayProjectProvider implements ILiferayProjectP
         return this.displayName;
     }
 
-    public String[] getPossibleVersions()
+    public String[] getPossibleVersions( Object... args )
     {
         return new String[] {};
     }

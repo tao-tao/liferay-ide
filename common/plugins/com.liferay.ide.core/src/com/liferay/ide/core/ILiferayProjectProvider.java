@@ -27,7 +27,7 @@ public interface ILiferayProjectProvider
 
     String getDisplayName();
 
-    String[] getPossibleVersions();
+    String[] getPossibleVersions( Object... args );
 
     int getPriority();
 

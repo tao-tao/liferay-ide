@@ -16,7 +16,7 @@ package com.liferay.ide.project.core.model.internal;
 
 import com.liferay.ide.core.ILiferayProjectProvider;
 import com.liferay.ide.project.core.LiferayProjectCore;
-import com.liferay.ide.project.core.model.NewLiferayPluginProjectOp;
+import com.liferay.ide.project.core.model.NewLiferayProfile;
 
 import java.util.Collections;
 import java.util.Set;
@@ -47,20 +47,20 @@ public class VersionPossibleValuesService extends PossibleValuesService
         }
         else if ( this.versionsJob == null )
         {
-            this.versionsJob = new Job("Determining possible Liferay versions.")
+            this.versionsJob = new Job("Determining possible liferay-maven-plugin versions.")
             {
                 @Override
                 protected IStatus run( IProgressMonitor monitor )
                 {
-                    final NewLiferayPluginProjectOp op = op();
+                    final NewLiferayProfile newLiferayProfile = newLiferayProfile();
 
-                    if( ! op.disposed() )
+                    if( ! newLiferayProfile.disposed() )
                     {
-                        final ILiferayProjectProvider projectProvider = op.getProjectProvider().content();
+                        final ILiferayProjectProvider projectProvider = newLiferayProfile.getProjectProvider().content();
 
                         try
                         {
-                            versions = projectProvider.getPossibleVersions();
+                            versions = projectProvider.getPossibleVersions( "com.liferay.maven.plugins:liferay-maven-plugin:[6,)" );
                         }
                         catch( Exception e )
                         {
@@ -78,9 +78,9 @@ public class VersionPossibleValuesService extends PossibleValuesService
         }
     }
 
-    private NewLiferayPluginProjectOp op()
+    private NewLiferayProfile newLiferayProfile()
     {
-        return context( NewLiferayPluginProjectOp.class );
+        return context( NewLiferayProfile.class );
     }
 
     @Override
