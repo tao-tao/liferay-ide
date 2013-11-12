@@ -493,28 +493,43 @@
 		<mkdir dir="${output.dir}" />
 	</target>
 
+	<target name="conf-eclipse.ini">
+		<if>
+			<available file="${eclipse.ini.dir}" />
+			<then>
+				<replaceregexp file="${eclipse.ini.dir}"
+					match="256"
+					replace="384"
+					flags="g"
+				/>
+
+				<replaceregexp file="${eclipse.ini.dir}"
+					match="-Xmx512m"
+					replace="-Xmx1024m"
+					flags="g"
+				/>
+			</then>
+		</if>
+
+		<echo>eclipse.ini configuration Finished.</echo>
+	</target>
+
 	<target name="output-zip" depends="clean-output-dir">
+		<if>
+			<isset property="isMac" />
+			<then>
+				<property name="eclipse.ini.dir" value="${work.dir}/eclipse/Eclipse.app/Contents/MacOS/eclipse.ini" />
+			</then>
+			<else>
+				<property name="eclipse.ini.dir" value="${eclipse.dir}/eclipse.ini"/>
+			</else>
+		</if>
+
     	<if>
     		<isset property="isUnix" />
     		<then>
-    			<if>
-    				<available file="${eclipse.dir}/eclipse.ini" />
-    				<then>
-						<replace file="${eclipse.ini.dir}/eclipse.ini" 
-							token="-Xmx512m" value="-Xmx1024m" />
-						<replace file="${eclipse.ini.dir}/eclipse.ini" 
-							token="256m" value="384m" />
-    				</then>
-    			</if>
-    			<if>
-    				<available file="${eclipse.ini.dir}/eclipse.ini" />
-        			<then>
-        				<replace file="${eclipse.ini.dir}/eclipse.ini" 
-        					token="-Xmx512m" value="-Xmx1024m" />
-        				<replace file="${eclipse.ini.dir}/eclipse.ini" 
-        					token="256m" value="384m" />
-        			</then>
-    			</if>
+    			<antcall target="conf-eclipse.ini"/>
+
     			<if>
     				<available file="${work.dir}/eclipse/eclipse" />
     				<then>
@@ -530,10 +545,11 @@
     			</if>
     		</then>
     		<else>
+    			<antcall target="conf-eclipse.ini"/>
+
     			<zip destfile="${output.dir}/${output.zip.name}" basedir="${work.dir}" />
     			<property name="final.name" value="${output.dir}/${output.zip.name}"/>
     		</else>
     	</if>
 	</target>
-
 </project>
