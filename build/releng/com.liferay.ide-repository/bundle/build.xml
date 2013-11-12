@@ -498,20 +498,22 @@
     		<isset property="isUnix" />
     		<then>
     			<if>
-    				<not>
-    					<available file="${eclipse.dir}/eclipse.ini" />
-    				</not>
+    				<available file="${eclipse.dir}/eclipse.ini" />
     				<then>
-    					<if>
-    						<available file="${eclipse.ini.dir}/eclipse.ini" />
-        					<then>
-        						<replace file="${eclipse.ini.dir}/eclipse.ini" 
-        							token="-Xmx512m" value="-Xmx1024m" />
-        						<replace file="${eclipse.ini.dir}/eclipse.ini" 
-        							token="256m" value="384m" />
-        					</then>
-    					</if>
+						<replace file="${eclipse.ini.dir}/eclipse.ini" 
+							token="-Xmx512m" value="-Xmx1024m" />
+						<replace file="${eclipse.ini.dir}/eclipse.ini" 
+							token="256m" value="384m" />
     				</then>
+    			</if>
+    			<if>
+    				<available file="${eclipse.ini.dir}/eclipse.ini" />
+        			<then>
+        				<replace file="${eclipse.ini.dir}/eclipse.ini" 
+        					token="-Xmx512m" value="-Xmx1024m" />
+        				<replace file="${eclipse.ini.dir}/eclipse.ini" 
+        					token="256m" value="384m" />
+        			</then>
     			</if>
     			<if>
     				<available file="${work.dir}/eclipse/eclipse" />
