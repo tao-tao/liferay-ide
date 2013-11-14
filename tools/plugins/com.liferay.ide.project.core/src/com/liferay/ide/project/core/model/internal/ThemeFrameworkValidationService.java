@@ -16,9 +16,6 @@ package com.liferay.ide.project.core.model.internal;
 
 import com.liferay.ide.project.core.model.NewLiferayPluginProjectOp;
 
-import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.ValidationService;
 
@@ -28,8 +25,6 @@ import org.eclipse.sapphire.services.ValidationService;
  */
 public class ThemeFrameworkValidationService extends ValidationService
 {
-
-    private Listener listener;
 
     @Override
     protected Status compute()
@@ -44,20 +39,6 @@ public class ThemeFrameworkValidationService extends ValidationService
         }
 
         return retval;
-    }
-
-    @Override
-    protected void initValidationService()
-    {
-        this.listener = new FilteredListener<PropertyContentEvent>()
-        {
-            protected void handleTypedEvent( final PropertyContentEvent event )
-            {
-                refresh();
-            }
-        };
-
-        op().getProjectName().attach( this.listener );
     }
 
     private NewLiferayPluginProjectOp op()
