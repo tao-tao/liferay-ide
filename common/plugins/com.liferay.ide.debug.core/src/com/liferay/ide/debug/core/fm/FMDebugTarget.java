@@ -335,13 +335,13 @@ public class FMDebugTarget extends FMDebugElement implements IDebugTarget, IDebu
      */
     public void breakpointAdded( IBreakpoint breakpoint )
     {
-        if( supportsBreakpoint( breakpoint ) && ! this.launch.isTerminated() )
+        if( supportsBreakpoint( breakpoint ) && !this.launch.isTerminated() )
         {
             try
             {
                 Debugger debugger = getDebuggerClient();
 
-                if( debugger !=null && breakpoint.isEnabled() )
+                if( debugger != null && breakpoint.isEnabled() )
                 {
                     addRemoteBreakpoints( debugger, new IBreakpoint[] { breakpoint } );
                 }
