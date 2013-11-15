@@ -61,31 +61,6 @@ public interface PublicRenderParameter extends QName, Identifiable
 
     void setIdentifier( String value );
 
-    // *** NamespaceURI ***
-
-    @Label( standard = "Namespace URI" )
-    // @DefaultValue( text = "NAMESPACE_URI" )
-    @XmlBinding( path = "qname" )
-    @Service( impl = NameOrQnameValidationService.class, params = { @Param( name = "qname", value = "" ) } )
-    @CustomXmlValueBinding( impl = QNamespaceValueBinding.class, params = { "qname" } )
-    ValueProperty PROP_NAMESPACE_URI = new ValueProperty( TYPE, "NamespaceURI" ); //$NON-NLS-1$
-
-    Value<String> getNamespaceURI();
-
-    void setNamespaceURI( String value );
-
-    // *** LocalPart ***
-
-    @Label( standard = "Local Part" )
-    @XmlBinding( path = "qname" )
-    @Service( impl = NameOrQnameValidationService.class, params = { @Param( name = "qname", value = "" ) } )
-    @CustomXmlValueBinding( impl = QNameLocalPartValueBinding.class, params = { "qname" } )
-    ValueProperty PROP_LOCAL_PART = new ValueProperty( TYPE, "LocalPart" ); //$NON-NLS-1$
-
-    Value<String> getLocalPart();
-
-    void setLocalPart( String value );
-
     // *** Name ***
 
     @Label( standard = "Name" )

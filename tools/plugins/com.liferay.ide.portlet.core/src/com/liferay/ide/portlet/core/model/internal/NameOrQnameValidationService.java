@@ -23,6 +23,9 @@ import com.liferay.ide.portlet.core.model.QName;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.ValidationService;
@@ -37,6 +40,8 @@ public class NameOrQnameValidationService extends ValidationService
      * (non-Javadoc)
      * @see org.eclipse.sapphire.modeling.PropertyValidationService#validate()
      */
+    private Listener listener;
+
     @Override
     public Status compute()
     {
@@ -84,6 +89,22 @@ public class NameOrQnameValidationService extends ValidationService
      * @param text
      * @return
      */
+
+    @Override
+    protected void initValidationService()
+    {
+        this.listener = new FilteredListener<PropertyContentEvent>()
+        {
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                refresh();
+            }
+        };
+
+        op().getLocalPart().attach( this.listener );
+        op().getNamespaceURI().attach( this.listener );
+    }
+
     private boolean isEmptyOrNull( String text )
     {
         if( text == null || text.trim().length() == 0 )
@@ -104,4 +125,8 @@ public class NameOrQnameValidationService extends ValidationService
         }
     }
 
+    private EventDefinition op()
+    {
+        return context( EventDefinition.class );
+    }
 }
