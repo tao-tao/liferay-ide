@@ -43,19 +43,6 @@ public interface EventDefinition extends QName, Identifiable, Describeable
 
     ElementType TYPE = new ElementType( EventDefinition.class );
 
-//    // *** Name ***
-//
-//    @Label( standard = "Name" )
-//    @XmlBinding( path = "name" )
-//    @Service( impl = NameOrQnameValidationService.class )
-//    @Enablement( expr = "${(NamespaceURI == 'NAMESPACE_URI' && LocalPart == 'LOCAL_PART') || (empty NamespaceURI && empty LocalPart) }" )
-//    @CustomXmlValueBinding( impl = NameAndQNameChoiceValueBinding.class, params = { "name" } )
-//    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" ); //$NON-NLS-1$
-//
-//    Value<String> getName();
-//
-//    void setName( String value );
-
     // *** Aliases ***
 
     @Type( base = AliasQName.class )

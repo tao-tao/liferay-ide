@@ -31,8 +31,6 @@ import org.eclipse.sapphire.services.ReferenceService;
  */
 public class EventDefinitionReferenceService extends ReferenceService
 {
-    private static final String QUERY_BY_QNAME = "qname"; //$NON-NLS-1$
-
     /*
      * (non-Javadoc)
      * @see org.eclipse.sapphire.modeling.ReferenceService#resolve(java.lang.String)
@@ -46,14 +44,10 @@ public class EventDefinitionReferenceService extends ReferenceService
         {
             for( EventDefinition eventDefinition : config.getEventDefinitions() )
             {
-                if( QUERY_BY_QNAME.equals( param( "0" ) ) ) //$NON-NLS-1$
+                if( equal( getQName( eventDefinition ), reference ) )
                 {
-                    if( equal( getQName( eventDefinition ), reference ) )
-                    {
-                        return eventDefinition;
-                    }
+                    return eventDefinition;
                 }
-
             }
         }
 
