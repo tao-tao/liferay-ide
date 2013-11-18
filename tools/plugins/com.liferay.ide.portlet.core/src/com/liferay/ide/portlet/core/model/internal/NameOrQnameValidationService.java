@@ -17,8 +17,6 @@
 
 package com.liferay.ide.portlet.core.model.internal;
 
-import com.liferay.ide.portlet.core.model.EventDefinition;
-import com.liferay.ide.portlet.core.model.PublicRenderParameter;
 import com.liferay.ide.portlet.core.model.QName;
 
 import org.eclipse.osgi.util.NLS;
@@ -48,8 +46,6 @@ public class NameOrQnameValidationService extends ValidationService
         Element element = context( Element.class );
 
         final String elementLabel = element.type().getLabel( false, CapitalizationType.FIRST_WORD_ONLY, false );
-        EventDefinition eventDefinition = null;
-        PublicRenderParameter publicRenderParameter = null;
         QName iqName = null;
         String name = null;
         String nsURI = null;
@@ -59,18 +55,6 @@ public class NameOrQnameValidationService extends ValidationService
             iqName = (QName) element;
             nsURI = iqName.getNamespaceURI().text( false );
             localPart = iqName.getLocalPart().text( false );
-        }
-
-        if( element instanceof EventDefinition )
-        {
-            eventDefinition = (EventDefinition) element;
-            name = eventDefinition.getName().content( false );
-        }
-
-        if( element instanceof PublicRenderParameter )
-        {
-            publicRenderParameter = (PublicRenderParameter) element;
-            name = publicRenderParameter.getName().content( false );
         }
 
         if( isEmptyOrNull( name ) && isEmptyOrNull( nsURI ) && isEmptyOrNull( localPart ) )
@@ -125,8 +109,8 @@ public class NameOrQnameValidationService extends ValidationService
         }
     }
 
-    private EventDefinition op()
+    private QName op()
     {
-        return context( EventDefinition.class );
+        return context( QName.class );
     }
 }

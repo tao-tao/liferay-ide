@@ -31,7 +31,6 @@ import org.eclipse.sapphire.services.ReferenceService;
  */
 public class EventDefinitionReferenceService extends ReferenceService
 {
-    private static final String QUERY_BY_NAME = "name"; //$NON-NLS-1$
     private static final String QUERY_BY_QNAME = "qname"; //$NON-NLS-1$
 
     /*
@@ -47,14 +46,7 @@ public class EventDefinitionReferenceService extends ReferenceService
         {
             for( EventDefinition eventDefinition : config.getEventDefinitions() )
             {
-                if( QUERY_BY_NAME.equals( param( "0" ) ) ) //$NON-NLS-1$
-                {
-                    if( equal( eventDefinition.getName().content(), reference ) )
-                    {
-                        return eventDefinition;
-                    }
-                }
-                else if( QUERY_BY_QNAME.equals( param( "0" ) ) ) //$NON-NLS-1$
+                if( QUERY_BY_QNAME.equals( param( "0" ) ) ) //$NON-NLS-1$
                 {
                     if( equal( getQName( eventDefinition ), reference ) )
                     {
