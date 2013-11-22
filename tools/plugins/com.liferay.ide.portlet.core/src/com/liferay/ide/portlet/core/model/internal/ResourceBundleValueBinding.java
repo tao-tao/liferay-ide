@@ -80,14 +80,6 @@ public final class ResourceBundleValueBinding extends XmlValueBindingImpl
     public void write( final String value )
     {
         final XmlElement element = xml( false ).getChildElement( this.params[0], true );
-        if( value != null && ( value.endsWith( ".properties" ) || value.indexOf( "/" ) != -1 ) )  //$NON-NLS-1$//$NON-NLS-2$
-        {
-            IProject project = property().element().adapt( IProject.class );
-            element.setText( PortletUtil.convertIOToJavaFileName( project, value.trim() ) );
-        }
-        else
-        {
-            element.setText( value );
-        }
+        element.setText( value );
     }
 }

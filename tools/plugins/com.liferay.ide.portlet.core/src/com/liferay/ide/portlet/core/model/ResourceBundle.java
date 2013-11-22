@@ -19,6 +19,7 @@
 package com.liferay.ide.portlet.core.model;
 
 import com.liferay.ide.core.model.internal.GenericResourceBundlePathService;
+import com.liferay.ide.portlet.core.model.internal.ResourceBundleValidationService;
 import com.liferay.ide.portlet.core.model.internal.ResourceBundleValueBinding;
 
 import org.eclipse.sapphire.Element;
@@ -30,6 +31,7 @@ import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
@@ -47,7 +49,14 @@ public interface ResourceBundle extends Element
     // *** ResourceBundle ***
 
     @Type( base = Path.class )
-    @Service( impl = GenericResourceBundlePathService.class )
+    @Services
+    (
+        value =
+        {
+            @Service( impl = GenericResourceBundlePathService.class ),
+            @Service( impl = ResourceBundleValidationService.class ),
+        }
+    )
     @FileExtensions( expr = "properties" )
     @ValidFileSystemResourceType( FileSystemResourceType.FILE )
     @XmlBinding( path = "resource-bundle" )
