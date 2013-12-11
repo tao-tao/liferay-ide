@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.server.ui.serverImages">
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.core.publishers">
+   </extension>
+   <extension
+         point="org.eclipse.wst.server.ui.editorPageSections">
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.runtimes">
+   </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.ui.images">
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+   </extension>
+
+</plugin>
