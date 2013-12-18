@@ -35,20 +35,16 @@ public class ArtifactVersionDefaultValueService extends DefaultValueService
     {
         String data = null;
 
-        if( op().getProjectName().content() != null &&
-            op().getProjectName().service( ProjectNameValidationService.class ).validation().ok() )
+        final Path location = op().getLocation().content();
+
+        if( location != null )
         {
-            final Path location = op().getLocation().content();
+            final NewLiferayPluginProjectOp op = op();
+            final String parentProjectLocation = location.toOSString();
+            final IPath parentProjectOsPath = org.eclipse.core.runtime.Path.fromOSString( parentProjectLocation );
+            final String projectName = op().getProjectName().content();
 
-            if( location != null )
-            {
-                final NewLiferayPluginProjectOp op = op();
-                final String parentProjectLocation = location.toOSString();
-                final IPath parentProjectOsPath = org.eclipse.core.runtime.Path.fromOSString( parentProjectLocation );
-                final String projectName = op().getProjectName().content();
-
-                data = NewLiferayPluginProjectOpMethods.getMavenParentPomVersion( op, projectName, parentProjectOsPath );
-            }
+            data = NewLiferayPluginProjectOpMethods.getMavenParentPomVersion( op, projectName, parentProjectOsPath );
         }
 
         if( data == null )
