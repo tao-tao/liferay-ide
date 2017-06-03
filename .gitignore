@@ -10,3 +10,4 @@ target/
 /.settings/
 /.project
 laut
+*.svn-base
